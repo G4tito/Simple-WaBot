@@ -1,10 +1,11 @@
 {
     "name": "Simple-WaBot",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Simple WhatsApp bot using Baileys library.",
     "main": "index.js",
     "directories": {
-        "lib": "lib"
+        "lib": "lib",
+        "plugins": "plugins"
     },
     "scripts": {
         "start": "node index.js",
@@ -18,9 +19,14 @@
     "author": "G4tito",
     "license": "MIT",
     "dependencies": {
+        "@adiwajshing/keyed-db": "^0.2.4",
         "@whiskeysockets/baileys": "^6.7.5",
+        "axios": "^0.24.0",
         "cfonts": "^3.2.0",
         "chalk": "^4.1.2",
+        "chokidar": "^3.6.0",
+        "fs": "0.0.1-security",
+        "link-preview-js": "^3.0.5",
         "pino-pretty": "^11.2.1",
         "qrcode-terminal": "^0.12.0"
     }
