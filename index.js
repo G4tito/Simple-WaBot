@@ -9,20 +9,18 @@ const {
 } = require('@whiskeysockets/baileys');
 const { Boom } = require('@hapi/boom');
 const pino = require('pino');
-const pretty = require('pino-pretty');
 const fs = require('fs');
+
+const { logger } = require('./lib/print.js');
+const { loadPlugins } = require('./lib/plugins.js');
 
 const serialize = require('./lib/serialize.js');
 const handler = require('./handler.js');
 
-const stream = pretty({
-    colorize: true
-});
-
-const logger = pino({ level: 'trace' }, stream);
 const store = makeInMemoryStore({ logger: pino().child({ level: 'fatal', stream: 'store' }) });
 
 async function startSock() {
+async function connectSock() {
     const { state, saveCreds } = await useMultiFileAuthState('session', pino({ level: 'fatal' }));
     const { version, isLatest } = await fetchLatestBaileysVersion();
     logger.info(`Using WA v${version.join('.')}, isLatest: ${isLatest}`);
@@ -94,5 +92,10 @@ async function startSock() {
     return sock;
 }
 
+    logger.info('Cargando plugins..');
+    await loadPlugins({ logger: true });
+    await connectSock()
+        .catch(e => console.log(e));
+}
+
 startSock()
-    .catch(e => console.log(e));
