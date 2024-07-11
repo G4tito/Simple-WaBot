@@ -4,12 +4,15 @@ const {
     useMultiFileAuthState,
     fetchLatestBaileysVersion,
     makeCacheableSignalKeyStore,
+    DisconnectReason,
     Browsers
 } = require('@whiskeysockets/baileys');
 const { Boom } = require('@hapi/boom');
 const pino = require('pino');
 const pretty = require('pino-pretty');
 const fs = require('fs');
+
+const serialize = require('./lib/serialize.js');
 
 const stream = pretty({
     colorize: true
@@ -51,8 +54,10 @@ async function startSock() {
         let message = upsert.messages[0];
         try {
             console.log(message);
-            if (message.message.conversation === '/alive') {
-                await sock.sendMessage(message.key.remoteJid, { text: 'Hello there!' });
+            const msg = serialize(message, sock);
+            console.log('SERIALIZE', msg);
+            if (msg.text === '/alive') {
+                await msg.reply('Hello there!');
             }
         } catch (e) {
             console.error(e);
