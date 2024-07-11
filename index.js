@@ -13,6 +13,7 @@ const pretty = require('pino-pretty');
 const fs = require('fs');
 
 const serialize = require('./lib/serialize.js');
+const handler = require('./handler.js');
 
 const stream = pretty({
     colorize: true
@@ -56,9 +57,7 @@ async function startSock() {
             console.log(message);
             const msg = serialize(message, sock);
             console.log('SERIALIZE', msg);
-            if (msg.text === '/alive') {
-                await msg.reply('Hello there!');
-            }
+            handler(msg, sock);
         } catch (e) {
             console.error(e);
         }
