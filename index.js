@@ -46,21 +46,26 @@ async function connectSock() {
             {}).message || { conversation: null }
     });
 
-    store.bind(sock.ev);
     sock.ev.on('creds.update', await saveCreds);
 
     sock.ev.on('messages.upsert', async (upsert) => {
         let message = upsert.messages[0];
         try {
             console.log(message);
+            if (message.messageStubParameters)
+		        return;
+		    const store_msg = await store.loadMessage(message.key.remoteJid, message.key.id);
+		    if (store_msg)
+		        return;
             const msg = serialize(message, sock);
-            console.log('SERIALIZE', msg);
             handler(msg, sock);
         } catch (e) {
             console.error(e);
         }
     });
-
+    
+    store.bind(sock.ev);
+    
     sock.ev.on('connection.update', async (update) => {
         const { lastDisconnect, connection } = update;
 
