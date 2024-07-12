@@ -1,6 +1,5 @@
 const { plugins } = require('./lib/plugins.js');
-
-const prefixList = ['/', '!', '#'];
+const { prefixList } = require('./setting.js');
 
 const handler = async (msg, sock) => {
     try {
