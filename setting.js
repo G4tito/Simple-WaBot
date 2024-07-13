@@ -10,6 +10,6 @@ const owner = [
     // ['number', 'name']
 ];
 
-const prefixList = ['/', '!', '#'];
+const prefixList = ['/', '!', '#', 's!', '', '🍢'];
 
 module.exports = { owner, prefixList };
