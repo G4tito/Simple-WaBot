@@ -1,5 +1,9 @@
 const { plugins } = require('./lib/plugins.js');
 const { owner, prefixList } = require('./setting.js');
+const { decodeJid } = require('./lib/func.js');
+const { printLog } = require('./lib/print.js');
+
+const db = require('./lib/database.js');
 
 const handler = async (msg, sock) => {
     try {
@@ -10,50 +14,63 @@ const handler = async (msg, sock) => {
 
         const trimText = (prefix.length > 0) ? msg.text.slice(prefix.length).trim() : msg.text.trim();
         const command = trimText.split(/\s+/)[0].toLowerCase();
-        const text = trimText.replace(command, '').trim();
+        const text = trimText.replace(new RegExp(command.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'), '').trim();
         const args = text.split(/\s+/);
 
-        const isCmd = command.length === 0 ? false : !!prefix || prefix === '';
         const isGroup = msg.from.endsWith('@g.us');
         const isPrivate = msg.from.endsWith('@s.whatsapp.net');
         const isOwner = [...owner.map(([number]) => number)].map(v => v?.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(msg.sender);
 
+        const groupMetadata = isGroup ? await sock.groupMetadata(msg.from) : '';
+        const groupName = isGroup ? groupMetadata.subject : '';
+        const participants = isGroup ? groupMetadata.participants : '';
+		
+		const user = isGroup ? participants.find(u => decodeJid(u.id) === msg.sender) : '';
+		const bot = isGroup ? participants.find(b => decodeJid(b.id) === sock.user.jid) : '';
+		
+		const isSuperAdmin = user?.admin === 'superadmin' || false;
+        const isAdmin = isSuperAdmin || user?.admin === 'admin' || false;
+		const isBotAdmin = bot?.admin === 'admin' || false;
+
         const { commands } = plugins;
-        if (isCmd) {
-            const cmd = commands.map(c => Object.values(c)[0]).find((v) => v.command.find((x) => x.toLowerCase() === command)) || '';
-            if (cmd) {
-                const setting = {
-				    isOwner: false,
-				    isAdmin: false,
-				    isGroup: false,
-				    isBotAdmin: false,
-		            isPrivate: false,
-				    ...cmd.setting
-				};
+        const cmd = commands.map(c => Object.values(c)[0]).find((v) => v.command.find((x) => x.toLowerCase() === command)) || false;
+        
+        let isCommand = false;
+        if (cmd) {
+            isCommand = true;
+            
+            const setting = {
+				isGroup: false,
+				isPrivate: false,
+				isOwner: false,
+				isSuperAdmin: false,
+				isAdmin: false,
+				isBotAdmin: false,
+				...cmd.setting
+			};
 
-				if (setting.isGroup && !isGroup)
-                    return status({
-                        type: 'isGroup', msg
-                    });
-                if (setting.isPrivate && !isPrivate)
-                    return status({
-                        type: 'isPrivate', msg
-                    });
-                if (setting.isOwner && !isOwner)
-                    return status({
-                        type: 'isOwner', msg
-                    });
-                /*
-                if (setting.isAdmin && !isAdmin)
-                    return status({
-                        type: 'isAdmin', msg
-                    });
-                if (setting.isBotAdmin && !isBotAdmin)
-                    return status({
-                        type: 'isBotAdmin', msg
-                    });
-                */
+			if (setting.isGroup && !isGroup)
+                return status({
+                    type: 'isGroup', msg
+                });
+            if (setting.isPrivate && !isPrivate)
+                return status({
+                    type: 'isPrivate', msg
+                });
+            if (setting.isOwner && !isOwner)
+                return status({
+                    type: 'isOwner', msg
+                });
+            if (setting.isAdmin && !isAdmin)
+                return status({
+                    type: 'isAdmin', msg
+                });
+            if (setting.isBotAdmin && !isBotAdmin)
+                return status({
+                    type: 'isBotAdmin', msg
+                });
 
+            try {
                 cmd.start({
                     msg,
                     sock,
@@ -69,11 +86,27 @@ const handler = async (msg, sock) => {
                     isGroup,
                     isPrivate,
                     isOwner,
-
+                    isSuperAdmin,
+                    isAdmin,
+                    isBotAdmin,
+                    
+                    groupMetadata,
+                    groupName,
+                    participants,
+                
+                    db,
                     plugins
                 });
+            } catch (e) {
+                console.error(e)
+                if (e.name) {
+                    if (cmd?.setting?.error_react) await msg.react('❌');
+                    await m.reply('*' + e.name + '* : ' + e.message);
+                }
             }
         }
+        
+        await printLog({ msg, sock, args, command, groupName, isGroup, isCommand });
     } catch (e) {
         console.error(e);
     }
