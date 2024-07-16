@@ -1,4 +1,7 @@
 const { inspect } = require('util');
+const store = require('../lib/store.js');
+const func = require('../lib/func.js');
+const setting = require('../setting.js');
 
 exports.cmd = {
     name: ['eval'],
@@ -14,7 +17,7 @@ exports.cmd = {
         let result;
         try {
             let evaled = await (async () => {
-                with (context) {
+                with ({ ...context, ...store, func, setting }) {
                     return eval(`(async () => { ${text} })()`);
                 }
             })();
