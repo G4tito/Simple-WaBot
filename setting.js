@@ -4,7 +4,8 @@ const path = require('path');
 
 global.img = {
     avatar: readFileSync('./media/image/avatar.jpg'),
-    logo: readFileSync('./media/image/logo.jpg')
+    logo: readFileSync('./media/image/logo.jpg'),
+    cover: readFileSync('./media/image/cover.jpg')
 }
 
 const timeZone = 'America/Mexico_City';
