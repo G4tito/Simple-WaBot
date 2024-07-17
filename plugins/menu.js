@@ -32,20 +32,24 @@ exports.cmd = {
             let teks = 'Este es un bot *multifuncional* para WhatsApp, con funcionalidades *simples* que se *ampliarán* gradualmente. 🪶' + '\n\n'
                 + '\t• *Índice* 🗞' + '\n'
                 + '\t\t◦  *@text*: Ingresa un texto.' + '\n'
-                + '\t\t◦  *@url*: Ingresa un enlace.' + '\n\n'
+                + '\t\t◦  *@url*: Ingresa un enlace.' + '\n'
 
         for (const tag in tags) {
-            teks += `\t• *${tags[tag].name}*\n`;
+            teks += `\n\t• *${tags[tag].name}*\n`;
 
-            let nro = 0;
             const filteredCommands = plugins.commands.map(c => Object.values(c)[0]).filter(cmd => (cmd.category || []).includes(tag));
-            for (const [index, cmd] of filteredCommands.entries()) {
-                nro += 1;
-                const isFirst = nro === 1;
-                const isLast = nro === filteredCommands.length;
+            filteredCommands.forEach((cmd, index) => {
+                const isFirst = index === 0;
+                const isLast = index === filteredCommands.length - 1;
 
-                teks += `\t${isFirst ? '┌' : '│'} ${prefix + cmd.name[0]}${cmd.detail?.use ? ` *${cmd.detail.use}*` : ''}${isLast ? '└' : '│'}\n`;
-            }
+                if (isFirst) {
+                    teks += `\t┌ ${prefix + cmd.name[0]}${cmd.detail?.use ? ` *${cmd.detail.use}*` : ''}\n`;
+                } else if (isLast) {
+                    teks += `\t└ ${prefix + cmd.name[0]}${cmd.detail?.use ? ` *${cmd.detail.use}*` : ''}\n`;
+                } else {
+                    teks += `\t│ ${prefix + cmd.name[0]}${cmd.detail?.use ? ` *${cmd.detail.use}*` : ''}\n`;
+                }
+            });
         }
 
         let documentMessage = {
