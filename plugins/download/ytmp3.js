@@ -8,8 +8,8 @@ exports.cmd = {
     command: ['ytmp3'],
     category: ['download'],
     detail: {
-        use: 'url',
         desc: 'Descarga de audios de YouTube.',
+        use: '@url=[yt]'
     },
     setting: {
         error_react: true
