@@ -28,7 +28,6 @@ exports.cmd = {
         desc: 'Muestra todas las funciones disponibles.',
     },
     async start({ msg, sock, prefix, db, plugins }) {
-        let { version } = JSON.parse(fs.readFileSync(path.join(__dirname, '../', 'package.json'), 'utf8'));
         const { version } = JSON.parse(fs.readFileSync(path.join(__dirname, '../', 'package.json'), 'utf8'));
             let teks = 'Este es un bot *multifuncional* para WhatsApp, con funcionalidades *simples* que se *ampliarán* gradualmente. 🪶' + '\n\n'
                 + '\t• *Índice* 🗞' + '\n'
