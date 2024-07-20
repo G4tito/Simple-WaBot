@@ -1,12 +1,8 @@
 {
     "name": "Simple-WaBot",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "description": "Simple WhatsApp bot using Baileys library.",
     "main": "index.js",
-    "directories": {
-        "lib": "lib",
-        "plugins": "plugins"
-    },
     "scripts": {
         "start": "node index.js",
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -18,26 +14,31 @@
     ],
     "author": "G4tito",
     "license": "MIT",
+    "directories": {
+        "lib": "lib",
+        "plugins": "plugins"
+    },
     "dependencies": {
         "@adiwajshing/keyed-db": "^0.2.4",
         "@distube/ytdl-core": "^4.13.5",
         "@whiskeysockets/baileys": "^6.7.5",
         "awesome-phonenumber": "^6.9.0",
         "axios": "^0.24.0",
-        "cfonts": "^3.2.0",
         "chalk": "^4.1.2",
+        "cfonts": "^3.2.0",
         "chokidar": "^3.6.0",
         "file-type": "^16.5.4",
         "fluent-ffmpeg": "^2.1.2",
         "fs": "0.0.1-security",
         "human-readable": "^0.2.1",
         "jimp": "^0.16.2",
-        "node-webpmux": "^3.2.0",
         "link-preview-js": "^3.0.5",
         "moment-timezone": "^0.5.45",
         "node-fetch": "^2.6.4",
+        "node-webpmux": "^3.2.0",
         "pino-pretty": "^11.2.1",
         "qrcode-terminal": "^0.12.0",
+        "simple-git": "^3.25.0",
         "yt-search": "^2.7.4"
     }
 }
