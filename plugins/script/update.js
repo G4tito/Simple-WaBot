@@ -17,14 +17,14 @@ exports.cmd = {
             let v = await git.pull('origin', 'main');
             console.log(v)
             
-            const status = await git.status();
-            await msg.reply(JSON.stringify(status, null, 4));
+            //const status = await git.status();
+            //await msg.reply(JSON.stringify(status, null, 4));
 
-            const log = await git.log();
-            await msg.reply(JSON.stringify(log, null, 4));
+            //const log = await git.log();
+            //await msg.reply(JSON.stringify(log, null, 4));
             
-            const diff = await git.diff();
-            await msg.reply(JSON.stringify(diff, null, 4));
+            //const diff = await git.diff();
+            //await msg.reply(JSON.stringify(diff, null, 4));
         } catch (error) {
             console.error('Error al actualizar el bot:', error);
             msg.reply('Hubo un error al intentar actualizar el bot.');
