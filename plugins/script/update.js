@@ -1,4 +1,3 @@
-const { exec } = require('child_process');
 const simpleGit = require('simple-git');
 
 const git = simpleGit();
@@ -14,8 +13,20 @@ exports.cmd = {
         isOwner: true
     },
     async start({ msg }) {
-        await git.pull('origin', 'main');
-        const status = await git.status();
-        console.log(status);
+        try {
+            await git.pull('origin', 'main');
+            
+            const status = await git.status();
+            await msg.reply(JSON.stringify(status, null, 4));
+
+            const log = await git.log();
+            await msg.reply(JSON.stringify(log, null, 4));
+            
+            const diff = await git.diff();
+            await msg.reply(JSON.stringify(diff, null, 4));
+        } catch (error) {
+            console.error('Error al actualizar el bot:', error);
+            msg.reply('Hubo un error al intentar actualizar el bot.');
+        }
     }
 };
