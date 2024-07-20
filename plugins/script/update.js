@@ -12,6 +12,7 @@ exports.cmd = {
         isOwner: true
     },
     async start({ msg }) {
+        console.log(await git.fetch());
         let result = await git.pull('origin', 'main');
         console.log(result);
         const { created, deleted, files, deletions, insertions, summary } = result;
