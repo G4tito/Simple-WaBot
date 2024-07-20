@@ -26,14 +26,14 @@ exports.cmd = {
         let teks = '—  *YOUTUBE*  〤  *SEARCH*' + '\n';
         for (let i = 0; i < Math.min(15, result.length); i++) {
             teks += '\n'
-                + '- *Nro* ∙ `' + (i + 1) + '`\n'
-                + '- *Titulo* ∙ ' + result[i].title + '\n'
-                + '- *ID* ∙ ' + result[i].videoId + '\n'
-                + '- *Canal* ∙ ' + result[i].author.name + '\n'
-                + '- *Subido* ∙ ' + toTimeAgo(result[i].ago) + '\n'
-                + '- *Vistas* ∙ ' + (toCompact(result[i].views) || result[i].views) + '\n'
-                + '- *Duración* ∙ ' + result[i].timestamp + '\n'
-                + '- *Url* ∙ ' + 'https://youtu.be/' + result[i].videoId + '\n';
+                + '- *Nro* · `' + (i + 1) + '`\n'
+                + '- *Titulo* · ' + result[i].title + '\n'
+                + '- *ID* · ' + result[i].videoId + '\n'
+                + '- *Canal* · ' + result[i].author.name + '\n'
+                + '- *Subido* · ' + toTimeAgo(result[i].ago) + '\n'
+                + '- *Vistas* · ' + (toCompact(result[i].views) || result[i].views) + '\n'
+                + '- *Duración* · ' + result[i].timestamp + '\n'
+                + '- *Url* · ' + 'https://youtu.be/' + result[i].videoId + '\n';
         }
 
         await msg.reply(teks, { image: result[0].thumbnail });

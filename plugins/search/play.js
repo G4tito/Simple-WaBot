@@ -26,13 +26,13 @@ exports.cmd = {
 
         let URL = 'https://youtu.be/' + result.videoId;
         let teks = '—  *YOUTUBE*  〤  *PLAY*' + '\n\n'
-            + '- *Título* ∙ ' + result.title + '\n'
-            + '- *ID* ∙ ' + result.videoId + '\n'
-            + '- *Canal* ∙ ' + result.author.name + '\n'
-            + '- *Subido* ∙ ' + toTimeAgo(result.ago) + '\n'
-            + '- *Vistas* ∙ ' + (toCompact(result.views) || result.views) + '\n'
-            + '- *Duración* ∙ ' + result.timestamp + '\n'
-            + '- *URL* ∙ ' + URL + '\n';
+            + '- *Título* · ' + result.title + '\n'
+            + '- *ID* · ' + result.videoId + '\n'
+            + '- *Canal* · ' + result.author.name + '\n'
+            + '- *Subido* · ' + toTimeAgo(result.ago) + '\n'
+            + '- *Vistas* · ' + (toCompact(result.views) || result.views) + '\n'
+            + '- *Duración* · ' + result.timestamp + '\n'
+            + '- *URL* · ' + URL + '\n';
 
         let prepareMessage = await prepareWAMessageMedia({ image: { url: result.thumbnail }}, { upload: sock.waUploadToServer });
         let message = generateWAMessageFromContent(msg.from, {
