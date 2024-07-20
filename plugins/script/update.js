@@ -12,9 +12,10 @@ exports.cmd = {
         isOwner: true
     },
     async start({ msg }) {
-        const { behind } = await git.branch(['-v', '--no-abbrev']);
+        await git.fetch();
+        const commits = await git.log(['main..origin/main']);
         
-        if (behind > 0) {
+        if (commits.total === 0) {
             const result = await git.pull('origin', 'main');
             const { created, deleted, files, deletions, insertions, summary } = result;
             
@@ -26,13 +27,13 @@ exports.cmd = {
                     teks += ` • ${titles[index].replace(/^\w/, c => c.toUpperCase())}:\n${list.map(item => `- ${item}\n`).join('\n')}\n`;
                 }
             });
-            
+
             ['deletions', 'insertions'].forEach(key => {
                 if (Object.keys(result[key]).length > 0) {
                     teks += ` • ${key.replace(/^\w/, c => c.toUpperCase())}:\n${Object.entries(result[key]).map(([file, count]) => `- ${file} | ${count}`).join('\n')}\n`;
                 }
             });
-            
+
             teks += ` • Summary:\n- ${summary.changes} changes\n- ${summary.insertions} insertions (+)\n- ${summary.deletions} deletions (-)`;
 
             await msg.reply(teks);
