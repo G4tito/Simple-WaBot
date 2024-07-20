@@ -10,6 +10,10 @@ const tags = {
         emoji: '📚',
         name: 'Básicos'
     },
+    'moderation': {
+        emoji: '⚖',
+        name: 'Moderación'
+    },
     'convert': {
         emoji: '🧩',
         name: 'Convertidor'
@@ -46,6 +50,7 @@ exports.cmd = {
                 + '\t\t◦  *@text*: Ingresa un texto.' + '\n'
                 + '\t\t◦  *@quoted*: Responde a un mensaje.' + '\n'
                 + '\t\t◦  *@url*: Ingresa un enlace.' + '\n'
+                + '\t\t◦  *@user*: Etiqueta a un usuario.' + '\n'
 
         for (const tag in tags) {
             teks += `\n\t• ${tags[tag].emoji} › *${tags[tag].name}*\n`;
