@@ -13,7 +13,7 @@ exports.cmd = {
                 return msg.reply(String(error));
             }
             if (stderr) {
-                return msg.reply(String(stderr).trim());
+                await msg.reply(String(stderr).trim());
             }
             await msg.reply(String(stdout).trim());
         });

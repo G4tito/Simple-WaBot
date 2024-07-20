@@ -6,6 +6,14 @@ const path = require('path');
 const fs = require('fs');
 
 const tags = {
+    'basic': {
+        emoji: '📚',
+        name: 'Básicos'
+    },
+    'convert': {
+        emoji: '🧩',
+        name: 'Convertidor'
+    },
     'search': {
         emoji: '🔎',
         name: 'Búsqueda'
@@ -23,15 +31,16 @@ const tags = {
 exports.cmd = {
     name: ['menu'],
     command: ['menu', 'commands', 'help'],
-    category: ['main'],
+    category: ['basic'],
     detail: {
-        desc: 'Muestra todas las funciones disponibles.',
+        desc: 'Muestra una lista de todos los comandos disponibles.',
     },
     async start({ msg, sock, prefix, db, plugins }) {
         const { version } = JSON.parse(fs.readFileSync(path.join(__dirname, '../', 'package.json'), 'utf8'));
             let teks = 'Este es un bot *multifuncional* para WhatsApp, con funcionalidades *simples* que se *ampliarán* gradualmente. 🪶' + '\n\n'
                 + '\t• *Índice* 🗞' + '\n'
                 + '\t\t◦  *@text*: Ingresa un texto.' + '\n'
+                + '\t\t◦  *@quoted*: Responde a un mensaje.' + '\n'
                 + '\t\t◦  *@url*: Ingresa un enlace.' + '\n'
 
         for (const tag in tags) {
@@ -58,7 +67,7 @@ exports.cmd = {
             fileSha256: 'FikZgFEcHv5jpyU1PhL10sPCmtsmcqnWUKaxot10tUU=',
             fileLength: 1e14,
             mediaKey: 'RZ3iF3NexfIjD1MB9EfJhMo/xcBZnbEZ/gVSuxlrHWE=',
-            fileName: 'Official WaBot 猫',
+            fileName: 'Official WaBot  (猫)',
             fileEncSha256: 'K+Bkh4AGLJTffSvs63DuMZumwquU014W8XsaWvfakPM=',
             directPath: '/v/t62.7119-24/32511132_500473132560305_5925723291063172577_n.enc?ccb=11-4&oh=01_Q5AaIKnXNmUWgmxyNn_1uxfEnGyiI-eCZ-BMRZdX3O2jhQq2&oe=66BE7A32&_nc_sid=5e03e0',
         };
@@ -109,7 +118,23 @@ exports.cmd = {
 
 function greeting() {
     const time = moment().tz(timeZone).hour();
-    const greetings = ['Buenas noches 🎑', 'Buen día 🌄', 'Buenas tardes 🌇'];
-    const index = Math.floor((time % 24) / 8);
-    return greetings[index] || '';
+    const greetings = {
+        midnight: 'Buenas medianoche 🌌',
+        morning: 'Buen día 🌄',
+        noon: 'Buen mediodía 🌤',
+        afternoon: 'Buenas tardes 🌇',
+        night: 'Buenas noches 🎑'
+    };
+
+    if (time === 0) {
+        return greetings.midnight;
+    } else if (time >= 6 && time < 12) {
+        return greetings.morning;
+    } else if (time === 12) {
+        return greetings.noon;
+    } else if (time >= 13 && time < 19) {
+        return greetings.afternoon;
+    } else {
+        return greetings.night;
+    }
 }
