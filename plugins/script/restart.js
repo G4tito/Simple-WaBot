@@ -9,8 +9,8 @@ exports.cmd = {
         isOwner: true
     },
     async start({ msg }) {
+        await msg.reply('El bot se reiniciará en 3 segundos.');
         setTimeout(async () => {
-            await msg.reply('El bot se reiniciará en 3 segundos.');
             process.send('restart');
         }, 5000);
     }

@@ -12,10 +12,14 @@ exports.cmd = {
         isOwner: true
     },
     async start({ msg }) {
-        await git.fetch();
-        const commits = await git.log(['main..origin/main']);
-        
-        if (commits.total === 0) {
+        try {
+            await git.fetch();
+            const commits = await git.log(['main..origin/main']);
+            
+            if (commits.total === 0) {
+                return msg.reply('Already up to date.');
+            }
+            
             const result = await git.pull('origin', 'main');
             const { created, deleted, files, deletions, insertions, summary } = result;
             
@@ -37,8 +41,9 @@ exports.cmd = {
             teks += ` • Summary:\n- ${summary.changes} changes\n- ${summary.insertions} insertions (+)\n- ${summary.deletions} deletions (-)`;
 
             await msg.reply(teks);
-        } else {
-            await msg.reply('Already up to date.');
+        } catch (error) {
+            console.error('Error during update:', error);
+            await msg.reply('An error occurred while updating.');
         }
     }
 };
