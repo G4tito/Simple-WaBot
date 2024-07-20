@@ -1,5 +1,4 @@
 const simpleGit = require('simple-git');
-
 const git = simpleGit();
 
 exports.cmd = {
@@ -13,22 +12,27 @@ exports.cmd = {
         isOwner: true
     },
     async start({ msg }) {
-        try {
-            let v = await git.pull('origin', 'main');
-            await msg.reply(JSON.stringify(v, null, 4));
+        let result = await git.pull('origin', 'main');
+        console.log(result);
+        const { created, deleted, files, deletions, insertions, summary } = result;
+        
+        let teks = '*Git pull results.* 🍟\n';
+        
+        [created, deleted, files].forEach((list, index) => {
+            const titles = ['created', 'deleted', 'files'];
+            if (list.length > 0) {
+                teks += ` • ${titles[index].replace(/^\w/, c => c.toUpperCase())}:\n${list.map(item => `- ${item}`).join('\n')}\n`;
+            }
+        });
+        
+        ['deletions', 'insertions'].forEach(key => {
+            if (Object.keys(result[key]).length > 0) {
+                teks += ` • ${key.replace(/^\w/, c => c.toUpperCase())}:\n${Object.entries(result[key]).map(([file, count]) => `- ${file} | ${count}`).join('\n')}\n`;
+            }
+        });
+        
+        teks += ` • Summary:\n- ${summary.changes} changes\n- ${summary.insertions} insertions (+)\n- ${summary.deletions} deletions (-)`;
 
-            
-            //const status = await git.status();
-            //await msg.reply(JSON.stringify(status, null, 4));
-
-            //const log = await git.log();
-            //await msg.reply(JSON.stringify(log, null, 4));
-            
-            //const diff = await git.diff();
-            //await msg.reply(JSON.stringify(diff, null, 4));
-        } catch (error) {
-            console.error('Error al actualizar el bot:', error);
-            msg.reply('Hubo un error al intentar actualizar el bot.');
-        }
+        await msg.reply(teks);
     }
 };
