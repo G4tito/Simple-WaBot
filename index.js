@@ -1,23 +1,41 @@
-process.on('uncaughtException', console.error);
+console.log('☕ Starting..');
 
-const { logger, displayTitle } = require('./lib/print.js');
-const { loadPlugins } = require('./lib/plugins.js');
-const clearTmp = require('./lib/clearTmp.js');
-const connectSock = require('./lib/connection.js');
+const { spawn } = require('child_process');
+const path = require('path');
+const fs = require('fs');
 
-displayTitle();
+let isRunning = false;
 
-async function start() {
-    logger.info('Cargando plugins..');
-    await loadPlugins({ table: true });
+function start(file) {
+    if (isRunning) return;
+    isRunning = true;
 
-    // Clear Tmp: 1 min.
-    setInterval(async () => {
-        await clearTmp();
-    }, 1 * 60 * 1000);
+    const args = [path.join(__dirname, file), ...process.argv.slice(2)];
+    const p = spawn(process.argv[0], args, {
+        stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
+    });
 
-    await connectSock()
-        .catch(e => console.log(e));
+    p.on('message', (data) => {
+        if (data === 'restart') {
+            console.log('🍃 Restarting..');
+            p.kill();
+            isRunning = false;
+            start.apply(this, arguments);
+        }
+    });
+
+    p.on('exit', (code) => {
+        isRunning = false;
+        if (code) {
+            console.error('Exited with code:', code);
+        }
+        if (code === 0) return;
+        
+        fs.watchFile(args[0], () => {
+            fs.unwatchFile(args[0]);
+            start(file);
+        });
+    });
 }
 
-start();
+start('main.js');
