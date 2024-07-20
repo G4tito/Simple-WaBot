@@ -19,6 +19,11 @@ const owner = [
     // ['number', 'name']
 ];
 
+const sticker = {
+    author: '© simple-bot.js',
+    name: 'Sticker by'
+}
+
 const prefixList = ['/', '!', '#', '-', 's!', ' ', '🪶'];
 
-module.exports = { timeZone, owner, prefixList };
+module.exports = { timeZone, owner, prefixList, sticker };

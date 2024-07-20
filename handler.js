@@ -19,7 +19,7 @@ const handler = async (msg, sock) => {
 
         const isGroup = msg.from.endsWith('@g.us');
         const isPrivate = msg.from.endsWith('@s.whatsapp.net');
-        const isOwner = [...owner.map(([number]) => number)].map(v => v?.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(msg.sender);
+        const isOwner = [sock.user.jid, ...owner.map(([number]) => number)].map(v => v?.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(msg.sender);
 
         const groupMetadata = isGroup ? await sock.groupMetadata(msg.from) : '';
         const groupName = isGroup ? groupMetadata.subject : '';
@@ -70,7 +70,6 @@ const handler = async (msg, sock) => {
                     type: 'isBotAdmin', msg
                 });
 
-            try {
                 cmd.start({
                     msg,
                     sock,
@@ -96,14 +95,12 @@ const handler = async (msg, sock) => {
                 
                     db,
                     plugins
+                }).catch(async e => {
+                    if (e.name) {
+                        if (cmd?.setting?.error_react) await msg.react('❌');
+                        await msg.reply('*' + e.name + '* : ' + e.message);
+                    }
                 });
-            } catch (e) {
-                console.error(e)
-                if (e.name) {
-                    if (cmd?.setting?.error_react) await msg.react('❌');
-                    await m.reply('*' + e.name + '* : ' + e.message);
-                }
-            }
         }
         
         await printLog({ msg, sock, args, command, groupName, isGroup, isCommand });
