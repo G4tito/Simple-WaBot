@@ -14,7 +14,8 @@ exports.cmd = {
     },
     async start({ msg }) {
         try {
-            await git.pull('origin', 'main');
+            let v = await git.pull('origin', 'main');
+            console.log(v)
             
             const status = await git.status();
             await msg.reply(JSON.stringify(status, null, 4));
