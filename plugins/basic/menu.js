@@ -14,6 +14,10 @@ const tags = {
         emoji: '⚖',
         name: 'Moderación'
     },
+    'anime': {
+        emoji: '🧧',
+        name: 'Anime'
+    },
     'convert': {
         emoji: '🧩',
         name: 'Convertidor'
@@ -65,7 +69,7 @@ exports.cmd = {
                 } else if (isLast) {
                     teks += `\t└ ${prefix + cmd.name[0]}${cmd.detail?.use ? ` *${cmd.detail.use}*` : ''}\n`;
                 } else {
-                    teks += `\t│ ${prefix + cmd.name[0]}${cmd.detail?.use ? ` *${cmd.detail.use}*` : ''}\n`;
+                    teks += `\t├ ${prefix + cmd.name[0]}${cmd.detail?.use ? ` *${cmd.detail.use}*` : ''}\n`;
                 }
             });
         }
