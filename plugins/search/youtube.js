@@ -13,7 +13,7 @@ exports.cmd = {
     },
     async start({ msg, text, prefix, command }) {
         if (!text) {
-            return msg.reply(`Ingresa el *título* de un video de *YouTube*. 🎬\n\n• *Ejemplo* :\n\t◦  yts The Mystic - Adam Jensen`);
+            return msg.reply(`Ingresa el *título* de un video de *YouTube*. 🎬\n\n • *Ejemplo* :\n\t◦ ${prefix + command} The Mystic - Adam Jensen`);
         }
         
         await msg.react('🕓');
