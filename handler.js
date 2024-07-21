@@ -37,6 +37,8 @@ const handler = async (msg, sock) => {
         
         let isCommand = false;
         if (cmd) {
+            if(msg.id.startsWith('3EB0'))
+                return;
             isCommand = true;
             
             const setting = {
@@ -97,7 +99,7 @@ const handler = async (msg, sock) => {
                     plugins
                 }).catch(async e => {
                     if (e.name) {
-                        if (cmd?.setting?.error_react) await msg.react('❌');
+                        if (cmd.setting?.error_react) await msg.react('❌');
                         await msg.reply('*' + e.name + '* : ' + e.message);
                     }
                 });
