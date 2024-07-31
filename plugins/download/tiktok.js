@@ -19,13 +19,13 @@ exports.cmd = {
         if (!text) {
             return msg.reply('Ingresa el enlace del video de *TikTok* que deseas descargar.');
         }
-        
+
         if (!isTikTokUrl(text)) {
             return msg.reply('Ingresa un enlace válido del video de *TikTok* que deseas descargar.');
         }
 
         await msg.react('🕓');
-        
+
         let { status, result } = await tiktok.download(text);
         if (!status) {
             await msg.react('✖');
@@ -49,6 +49,6 @@ exports.cmd = {
 };
 
 function isTikTokUrl(url) {
-    const regex = /^(https?:\/\/)?([a-zA-Z0-9_-]+\.)?tiktok\.com\/[a-zA-Z0-9]+\/?$/;
+    const regex = /^(https?:\/\/)?(www\.)?tiktok\.com\/(@[a-zA-Z0-9._-]+|[a-zA-Z0-9._-]+\/video\/\d+)(\/.*)?$/;
     return regex.test(url);
 }
