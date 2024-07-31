@@ -49,6 +49,6 @@ exports.cmd = {
 };
 
 function isTikTokUrl(url) {
-    const regex = /^(https?:\/\/)?(www\.)?tiktok\.com\/(@[a-zA-Z0-9._-]+|[a-zA-Z0-9._-]+\/video\/\d+)(\/.*)?$/;
+    const regex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)?tiktok\.com\/(@[a-zA-Z0-9._-]+|[a-zA-Z0-9._-]+\/video\/\d+|[a-zA-Z0-9]+\/?)(\/.*)?$/;
     return regex.test(url);
 }
