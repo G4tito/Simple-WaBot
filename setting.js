@@ -24,6 +24,6 @@ const sticker = {
     name: 'Sticker by'
 }
 
-const prefixList = ['/', '!', '#', '-', 's!', '', '🪶'];
+const prefixList = ['/', '!', '#', '.', '-', 's!', ' ', '🪶'];
 
 module.exports = { timeZone, owner, prefixList, sticker };
