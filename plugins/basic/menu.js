@@ -112,9 +112,9 @@ exports.cmd = {
                                 {
                                     name: 'cta_url',
                                     buttonParamsJson: JSON.stringify({
-                                        display_text: 'Github 🍟',
-                                        url: 'https://github.com/G4tito/Simple-WaBot',
-                                        merchant_url: 'https://github.com/G4tito/Simple-WaBot'
+                                        display_text: 'Channel 🍟',
+                                        url: 'https://whatsapp.com/channel/0029Va9awpk2Jl8AQ3oiww3A',
+                                        merchant_url: 'https://whatsapp.com/channel/0029Va9awpk2Jl8AQ3oiww3A'
                                     })
                                 }
                             ],
