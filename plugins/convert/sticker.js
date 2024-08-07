@@ -12,7 +12,7 @@ exports.cmd = {
     async start({ msg }) {
         let q = msg.quoted ? msg.quoted : msg;
         if (!/(image\/(?!webp))|video/.test(q.media?.mimetype)) {
-            return msg.reply('🏷 | Responde a una *imagen/video/gif* que quieras convertir en *sticker*.');
+            return msg.reply('*🚩 Responde a una imagen/video/gif que quieras convertir en sticker.*');
         }
         
         let opts = {

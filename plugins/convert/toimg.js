@@ -12,11 +12,11 @@ exports.cmd = {
         let q = msg.quoted ? msg.quoted : msg;
 
         if (!/sticker/.test(q.type)) {
-            return msg.reply('🏷️ | Responde a un *sticker* que quieras convertir en *imagen*. (El sticker no debe estar animado)');
+            return msg.reply('*🚩 Responde a un sticker que quieras convertir en imagen.* (El sticker no debe estar animado)');
         }
 
         if (q.isAnimated) {
-            return msg.reply('El sticker no debe estar animado.');
+            return msg.reply('*🚩 El sticker no debe estar animado.*');
         }
 
         let media = await q.download();
