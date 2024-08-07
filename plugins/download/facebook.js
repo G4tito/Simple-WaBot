@@ -25,14 +25,17 @@ exports.cmd = {
         }
 
         await msg.react('🕓');
+        const start = Date.now();
 
         let status, result;
         ({ status, result } = await download.V2(text));
+
         if (!status) {
             ({ status, result } = await download.V3(text));
-            if (!status) {
-                ({ status, result } = await download.V1(text));
-            }
+        }
+
+        if (!status) {
+            ({ status, result } = await download.V1(text));
         }
 
         if (!status) {
@@ -40,11 +43,13 @@ exports.cmd = {
             return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
         }
 
+        const end = Date.now();
         const filteredMedia = result.media.filter(m => (m?.quality || '').includes('HD'));
-        for (let media of filteredMedia) {
+
+        for (const media of filteredMedia) {
             if ((media?.quality || '').includes('HD')) {
                 const sizeInBytes = await ufs(media.url);
-                
+
                 if (sizeInBytes >= isLimit) {
                     const readableSize = await formatSize(sizeInBytes);
                     const limitReadable = await formatSize(isLimit);
@@ -52,7 +57,8 @@ exports.cmd = {
                     return msg.reply(`*📂 | El video pesa ${readableSize}, excede el límite máximo de descarga que es de ${limitReadable}.*`);
                 }
             }
-            await msg.reply(null, { media: media.url });
+
+            await msg.reply(`🍟 *Scraping* · ${(end - start).toFixed(3)} ms`, { media: media.url });
         }
 
         await msg.react('✅');
