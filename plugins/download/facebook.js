@@ -1,8 +1,8 @@
 const { formatSize } = require('../../lib/func.js');
-const facebook = require('../../lib/scraper/facebookV2.js');
+const { download } = require('../../lib/scraper/facebook.js');
 const ufs = require('../../lib/ufs.js');
 
-const isLimit = 50; // 50 MB
+const isLimit = 50 * 1024 * 1024; // 50 MB
 
 exports.cmd = {
     name: ['facebook'],
@@ -17,31 +17,42 @@ exports.cmd = {
     },
     async start({ msg, text }) {
         if (!text) {
-            return msg.reply('Ingresa el enlace del video de *Facebook* que deseas descargar.');
+            return msg.reply('*🚩 Ingresa el enlace del video de Facebook que deseas descargar.*');
         }
-        
+
         if (!isFacebookUrl(text)) {
-            return msg.reply('Ingresa un enlace válido del video de *Facebook* que deseas descargar.');
+            return msg.reply('*🚩 Por favor, ingresa un enlace válido de Facebook.*');
         }
 
         await msg.react('🕓');
-        
-        let { status, result } = await facebook.download(text);
+
+        let status, result;
+        ({ status, result } = await download.V2(text));
         if (!status) {
-            await msg.react('✖');
-            return msg.reply('📛 | Hubo un error al obtener el resultado del vídeo.');
+            ({ status, result } = await download.V3(text));
+            if (!status) {
+                ({ status, result } = await download.V1(text));
+            }
         }
 
-        const filteredMedia = result.media.filter(m => m.quality === 'HD');
+        if (!status) {
+            await msg.react('✖');
+            return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
+        }
+
+        const filteredMedia = result.media.filter(m => (m?.quality || '').includes('HD'));
         for (let media of filteredMedia) {
-            if (media.quality === 'HD') {
-                const size = await formatSize(await ufs(media.url));
-                if (Number(size.split(' MB')[0]) >= isLimit || Number(size.split(' GB')[0]) >= 0) {
+            if ((media?.quality || '').includes('HD')) {
+                const sizeInBytes = await ufs(media.url);
+                
+                if (sizeInBytes >= isLimit) {
+                    const readableSize = await formatSize(sizeInBytes);
+                    const limitReadable = await formatSize(isLimit);
                     await msg.react('✖');
-                    return msg.reply(`El video pesa ${size}, excede el límite máximo de descarga que es de ${isLimit} MB.`);
+                    return msg.reply(`*📂 | El video pesa ${readableSize}, excede el límite máximo de descarga que es de ${limitReadable}.*`);
                 }
             }
-            await msg.reply(result.title, { media: media.url });
+            await msg.reply(null, { media: media.url });
         }
 
         await msg.react('✅');
@@ -49,6 +60,6 @@ exports.cmd = {
 };
 
 function isFacebookUrl(url) {
-  const regex = /^https?:\/\/(www\.)?facebook\.com\/.+$/;
-  return regex.test(url);
+    const regex = /^https?:\/\/(www\.)?facebook\.com\/.+$/;
+    return regex.test(url);
 }
