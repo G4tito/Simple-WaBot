@@ -16,7 +16,7 @@ exports.cmd = {
         const commits = await git.log(['main..origin/main']);
 
         if (commits.total === 0) {
-            return msg.reply('Already up to date.');
+            return msg.reply('*🚩 Already up to date.*');
         }
 
         const result = await git.pull('origin', 'main');
