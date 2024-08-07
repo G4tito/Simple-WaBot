@@ -17,11 +17,11 @@ exports.cmd = {
     },
     async start({ msg, text }) {
         if (!text) {
-            return msg.reply('Ingresa el enlace del video de *Instagram* que deseas descargar.');
+            return msg.reply('*🚩 Ingresa el enlace del video de Instagram que deseas descargar.*');
         }
         
         if (!isInstagramUrl(text)) {
-            return msg.reply('Ingresa un enlace válido del video de *Instagram* que deseas descargar.');
+            return msg.reply('*🚩 Por favor, ingresa un enlace válido de Instagram.*');
         }
 
         await msg.react('🕓');
@@ -29,7 +29,7 @@ exports.cmd = {
         let { status, result } = await instagram.download(text);
         if (!status) {
             await msg.react('✖');
-            return msg.reply('📛 | Hubo un error al obtener el resultado del vídeo.');
+            return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
         }
 
         for (let media of result.media) {
@@ -48,6 +48,6 @@ exports.cmd = {
 };
 
 function isInstagramUrl(url) {
-  const regex = /^https?:\/\/(www\.)?instagram\.com\/.+$/;
-  return regex.test(url);
+    const regex = /^https?:\/\/(www\.)?instagram\.com\/.+$/;
+    return regex.test(url);
 }

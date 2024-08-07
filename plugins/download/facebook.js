@@ -58,7 +58,7 @@ exports.cmd = {
                 }
             }
 
-            await msg.reply(`🍟 *Scraping* · ${(end - start).toFixed(3)} ms`, { media: media.url });
+            await msg.reply(`🍟 *Scraping* · ${(end - start).toFixed(2)} ms`, { media: media.url });
         }
 
         await msg.react('✅');

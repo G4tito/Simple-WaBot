@@ -17,11 +17,11 @@ exports.cmd = {
     },
     async start({ msg, text }) {
         if (!text) {
-            return msg.reply('Ingresa el enlace del video de *TikTok* que deseas descargar.');
+            return msg.reply('*🚩 Ingresa el enlace del video de TikTok que deseas descargar.*');
         }
 
         if (!isTikTokUrl(text)) {
-            return msg.reply('Ingresa un enlace válido del video de *TikTok* que deseas descargar.');
+            return msg.reply('*🚩 Por favor, ingresa un enlace válido de TikTok.*');
         }
 
         await msg.react('🕓');
@@ -29,7 +29,7 @@ exports.cmd = {
         let { status, result } = await tiktok.download(text);
         if (!status) {
             await msg.react('✖');
-            return msg.reply('📛 | Hubo un error al obtener el resultado del vídeo.');
+            return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
         }
 
         const filteredMedia = result.media.filter(m => m.type === 'nwm' || m.type === 'photo');
