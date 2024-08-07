@@ -26,7 +26,6 @@ const handler = async (msg, sock) => {
         const isOwner = [sock.user.jid, ...owner.map(([number]) => number.replace(/[^0-9]/g, '') + '@s.whatsapp.net')].includes(msg.sender);
         const isRegistered = db.users.exist(msg.sender);
         const isBaileys = msg.id.startsWith('3EB0');
-        const isSocket = msg.key.fromMe || sock.user.jid === msg.sender;
 
         const groupMetadata = isGroup ? await sock.groupMetadata(msg.from) : {};
         const groupName = groupMetadata.subject || '';
@@ -42,11 +41,6 @@ const handler = async (msg, sock) => {
 
         if (!db.groups.exist(msg.from) && isGroup) {
             await db.groups.add(msg.from);
-            await db.save();
-        }
-
-        if (!db.settings.exist(sock.user.jid) && isSocket) {
-            await db.settings.add(sock.user.jid);
             await db.save();
         }
         
