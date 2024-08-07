@@ -1,6 +1,5 @@
 const { formatSize } = require('../../lib/func.js');
-const y2mate = require('../../lib/scraper/y2mate.js');
-const youtube = require('../../lib/scraper/youtube.js');
+const { download } = require('../../lib/scraper/youtube.js');
 const ufs = require('../../lib/ufs.js');
 
 const isLimit = 15 * 1024 * 1024; // 15 MB
@@ -28,9 +27,10 @@ exports.cmd = {
         await msg.react('🕓');
 
         let status, result;
-        ({ status, result } = await y2mate.download(text, 'audio'));
+        ({ status, result } = await download.V2(text, 'audio'));
+
         if (!status) {
-            ({ status, result } = await youtube.download(text, 'audio'));
+            ({ status, result } = await download.V1(text, 'audio'));
         }
 
         if (!status) {

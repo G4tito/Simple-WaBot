@@ -28,9 +28,10 @@ exports.cmd = {
         await msg.react('🕓');
 
         let status, result;
-        ({ status, result } = await y2mate.download(text, 'video'));
+        ({ status, result } = await download.V2(text, 'video'));
+
         if (!status) {
-            ({ status, result } = await youtube.download(text, 'video'));
+            ({ status, result } = await download.V1(text, 'video'));
         }
 
         if (!status) {
