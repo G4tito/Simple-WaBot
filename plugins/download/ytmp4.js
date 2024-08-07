@@ -1,5 +1,4 @@
 const { formatSize } = require('../../lib/func.js');
-const y2mate = require('../../lib/scraper/y2mate.js');
 const youtube = require('../../lib/scraper/youtube.js');
 const ufs = require('../../lib/ufs.js');
 
