@@ -14,7 +14,8 @@ exports.cmd = {
         desc: 'Adivina el país de la bandera mostrada.'
     },
     setting: {
-        isRegister: true
+        isRegister: true,
+        isGroup: true
     },
     async start({ msg }) {
         const isExist = await game.exist(msg.from);
@@ -51,7 +52,8 @@ exports.before = {
                     const correctAnswers = session.flag.name.map(a => a.toLowerCase());
 
                     if (correctAnswers.includes(answer)) {
-                        const user = db.users.get(msg.sender);
+                        const group = db.groups.get(msg.from);
+                        const user = group.users.get(msg.sender);
                         await msg.reply(`✅ | *Correcto*! La bandera es de *${session.flag.name[0]}*.`);
                         await game.del(msg.from);
                         user.exp += data.reward * 1;
