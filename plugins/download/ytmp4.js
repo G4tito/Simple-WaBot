@@ -6,8 +6,8 @@ const ufs = require('../../lib/ufs.js');
 const isLimit = 70 * 1024 * 1024; // 70 MB
 
 exports.cmd = {
-    name: ['ytmp3'],
-    command: ['ytmp3'],
+    name: ['ytmp4'],
+    command: ['ytmp4'],
     category: ['download'],
     detail: {
         desc: 'Descarga el video de YouTube.',
