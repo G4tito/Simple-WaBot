@@ -13,13 +13,13 @@ exports.cmd = {
     },
     async start({ msg, text, prefix, command }) {
         if (!text) {
-            return msg.reply(`Ingresa el *título* de un video de *YouTube*. 🎬\n\n • *Ejemplo* :\n\t◦ ${prefix + command} The Mystic - Adam Jensen`);
+            return msg.reply(`*🚩 Ingresa el título de un video para hacer una búsqueda en YouTube.*`);
         }
         
         await msg.react('🕓');
         let { status, result } = await youtube.search(text);
         if (!status) {
-            await msg.reply('📛 | No hay resultados disponibles que coincidan con su búsqueda.');
+            await msg.reply('*📛 | No hay resultados disponibles que coincidan con su búsqueda.*');
             return msg.react('✖');
         }
         
