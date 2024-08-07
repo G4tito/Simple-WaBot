@@ -1,5 +1,5 @@
 const { formatSize } = require('../../lib/func.js');
-const youtube = require('../../lib/scraper/youtube.js');
+const { download } = require('../../lib/scraper/youtube.js');
 const ufs = require('../../lib/ufs.js');
 
 const isLimit = 70 * 1024 * 1024; // 70 MB
