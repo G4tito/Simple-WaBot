@@ -11,16 +11,16 @@ exports.cmd = {
         isAdmin: true,
         isBotAdmin: true
     },
-    async start({ msg, participants }) {
+    async start({ msg, participants, sock }) {
         let who = msg.quoted ? msg.quoted.sender : msg.mentions[0];
         if (!who) {
-            return msg.reply('🔖 | *Menciona* o *responde* al *mensaje* del usuario que deseas *degradar* a *miembro*.');
+            return msg.reply('*🚩 Menciona o responde al mensaje del usuario que deseas degradar a miembro.*');
         }
         let member = participants.find(u => u.id === who);
         if (!member) {
-            return msg.reply('El usuario no está en el grupo.');
+            return msg.reply('*🚩 El usuario no está en el grupo.*');
         }
         await sock.groupParticipantsUpdate(m.chat, [who], 'demote');
-        await msg.reply(`✔ | El usuario @${who.split('@')[0]} ha sido degradado a miembro.`);
+        await msg.reply(`*🚩 El usuario @${who.split('@')[0]} ha sido degradado a miembro.*`);
     }
 };

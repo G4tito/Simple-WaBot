@@ -11,16 +11,16 @@ exports.cmd = {
         isAdmin: true,
         isBotAdmin: true
     },
-    async start({ msg, participants }) {
+    async start({ msg, participants, sock }) {
         let who = msg.quoted ? msg.quoted.sender : msg.mentions[0];
         if (!who) {
-            return msg.reply('🔖 | *Menciona* o *responde* el *mensaje* del *usuario* que deseas *eliminar*.');
+            return msg.reply('*🚩 Menciona o responde el mensaje del usuario que deseas eliminar.*');
         }
         let member = participants.find(u => u.id === who);
         if (!member) {
-            return msg.reply('El usuario no está en el grupo.');
+            return msg.reply('*🚩 El usuario no está en el grupo.*');
         }
         sock.groupParticipantsUpdate(m.chat, [who], 'remove');
-        await msg.reply(`✔ | El usuario @${who.split('@')[0]} ha sido eliminado con éxito.`);
+        await msg.reply(`*🚩 El usuario @${who.split('@')[0]} ha sido eliminado con éxito.*`);
     }
 };

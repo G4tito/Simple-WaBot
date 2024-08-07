@@ -11,8 +11,8 @@ exports.cmd = {
     setting: {
         isAdmin: true
     },
-    async start({ msg, text, prefix, command, participants }) {
-        if (!text) return msg.reply(`Ingresa un *texto* para etiquetar a *todos*. 📧\n\n • *Ejemplo* :\n\t◦ ${prefix + command} Hola!`);
+    async start({ msg, text, participants }) {
+        if (!text) return msg.reply(`*🚩 Ingresa un texto para etiquetar a todos.*`);
         
         let q = msg.quoted ? msg.quoted : msg;
         let media = q.media ? await q.download() : false;
