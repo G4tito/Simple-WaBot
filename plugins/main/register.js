@@ -57,7 +57,7 @@ exports.cmd = {
 function validateUsername(username) {
     const minLength = 3;
     const maxLength = 20;
-    const usernameRegex = /^[a-zA-Z0-9_]+$/;
+    const usernameRegex = /^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚüÜ_]+$/;
 
     if (typeof username !== 'string') {
         return { valid: false, message: 'El nombre de usuario debe ser una cadena de texto.' };
