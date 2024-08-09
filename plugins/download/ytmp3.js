@@ -2,7 +2,7 @@ const { formatSize } = require('../../lib/func.js');
 const { download } = require('../../lib/scraper/youtube.js');
 const ufs = require('../../lib/ufs.js');
 
-const isLimit = 70 * 1024 * 1024; // 70 MB
+const isLimit = 20 * 1024 * 1024; // 20 MB
 
 exports.cmd = {
     name: ['ytmp3'],
