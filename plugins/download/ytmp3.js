@@ -2,14 +2,14 @@ const { formatSize } = require('../../lib/func.js');
 const { download } = require('../../lib/scraper/youtube.js');
 const ufs = require('../../lib/ufs.js');
 
-const isLimit = 15 * 1024 * 1024; // 15 MB
+const isLimit = 70 * 1024 * 1024; // 70 MB
 
 exports.cmd = {
     name: ['ytmp3'],
     command: ['ytmp3'],
     category: ['download'],
     detail: {
-        desc: 'Descarga el audio del video de YouTube.',
+        desc: 'Descarga el audio del audio de YouTube.',
         use: '@url=[yt]'
     },
     setting: {
@@ -17,33 +17,24 @@ exports.cmd = {
     },
     async start({ msg, text }) {
         if (!text) {
-            return msg.reply('*🚩 Ingresa el enlace del video de YouTube que deseas descargar.*');
+            return msg.reply('*🚩 Ingresa el enlace de una música de YouTube que deseas descargar.*');
         }
         
         if (!isYouTubeUrl(text)) {
-            return msg.reply('*🚩 Por favor, ingresa un enlace válido de *YouTube*.');
+            return msg.reply('*🚩 Por favor, ingresa un enlace válido de YouTube.*');
         }
 
         await msg.react('🕓');
 
-        let status, result;
-        ({ status, result } = await download.V2(text, 'audio'));
+        const audio = await getAudio(text);
 
-        if (!status) {
-            ({ status, result } = await download.V3(text, 'audio'));
-        }
-
-        if (!status) {
-            ({ status, result } = await download.V1(text, 'audio'));
-        }
-
-        if (!status) {
+        if (!audio) {
             await msg.react('✖');
             return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
         }
 
-        const audio = result.audio?.find(v => v.quality === '128') || { url: result.buffer };
-        const sizeInBytes = await ufs(audio.url);
+        const urlToUse = audio.url || audio.buffer;
+        const sizeInBytes = await ufs(urlToUse);
 
         if (sizeInBytes >= isLimit) {
             const readableSize = await formatSize(sizeInBytes);
@@ -52,10 +43,22 @@ exports.cmd = {
             return msg.reply(`*📂 | El audio pesa ${readableSize}, excede el límite máximo de descarga que es de ${limitReadable}.*`);
         }
 
-        await msg.reply(null, { audio: audio.url, fileName: result.title + '.mp3', mimetype: 'audio/mpeg' });
+        await msg.reply(audio.title, { audio: urlToUse });
         await msg.react('✅');
     }
 };
+
+async function getAudio(url) {
+    let status, result;
+    for (const version of ['V2', 'V3', 'V1']) {
+        ({ status, result } = await download[version](url, 'audio'));
+        if (status) {
+            const audio = result.audio?.find(v => v.quality === '128');
+            if (audio) return audio;
+        }
+    }
+    return null;
+}
 
 function isYouTubeUrl(url) {
     const regex = /^(?:https?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed|shorts)\/?(?:\?.*v=|\/)?)([a-zA-Z0-9_-]+)/;

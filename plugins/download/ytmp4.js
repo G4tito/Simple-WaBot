@@ -21,29 +21,21 @@ exports.cmd = {
         }
         
         if (!isYouTubeUrl(text)) {
-            return msg.reply('*🚩 Por favor, ingresa un enlace válido de *YouTube*.');
+            return msg.reply('*🚩 Por favor, ingresa un enlace válido de YouTube.*');
         }
 
         await msg.react('🕓');
 
-        let status, result;
-        ({ status, result } = await download.V2(text, 'video'));
+        const video = await getVideo(text);
+        return console.log(video)
 
-        if (!status) {
-            ({ status, result } = await download.V3(text, 'video'));
-        }
-
-        if (!status) {
-            ({ status, result } = await download.V1(text, 'video'));
-        }
-
-        if (!status) {
+        if (!video) {
             await msg.react('✖');
             return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
         }
 
-        const video = result.video?.find(v => v.quality === '360p') || { url: result.buffer };
-        const sizeInBytes = await ufs(video.url);
+        const urlToUse = video.url || video.buffer;
+        const sizeInBytes = await ufs(urlToUse);
 
         if (sizeInBytes >= isLimit) {
             const readableSize = await formatSize(sizeInBytes);
@@ -52,10 +44,22 @@ exports.cmd = {
             return msg.reply(`*📂 | El video pesa ${readableSize}, excede el límite máximo de descarga que es de ${limitReadable}.*`);
         }
 
-        await msg.reply(result.title, { video: video.url });
+        await msg.reply(video.title, { video: urlToUse });
         await msg.react('✅');
     }
 };
+
+async function getVideo(url) {
+    let status, result;
+    for (const version of ['V2', 'V3', 'V1']) {
+        ({ status, result } = await download[version](url, 'video'));
+        if (status) {
+            const video = result.video.find(v => v.quality === '360p');
+            if (video) return video;
+        }
+    }
+    return null;
+}
 
 function isYouTubeUrl(url) {
     const regex = /^(?:https?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed|shorts)\/?(?:\?.*v=|\/)?)([a-zA-Z0-9_-]+)/;
