@@ -38,6 +38,8 @@ exports.cmd = {
             return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
         }
 
+        console.log(result);
+
         const video = result.video?.find(v => v.quality === '360p') || { url: result.buffer };
         const sizeInBytes = await ufs(video.url);
 

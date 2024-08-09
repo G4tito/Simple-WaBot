@@ -38,6 +38,8 @@ exports.cmd = {
             return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
         }
 
+        console.log(result);
+
         const audio = result.audio?.find(v => v.quality === '128') || { url: result.buffer };
         const sizeInBytes = await ufs(audio.url);
 
