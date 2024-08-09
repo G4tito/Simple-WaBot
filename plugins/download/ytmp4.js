@@ -30,6 +30,10 @@ exports.cmd = {
         ({ status, result } = await download.V2(text, 'video'));
 
         if (!status) {
+            ({ status, result } = await download.V3(text, 'video'));
+        }
+
+        if (!status) {
             ({ status, result } = await download.V1(text, 'video'));
         }
 
@@ -37,8 +41,6 @@ exports.cmd = {
             await msg.react('✖');
             return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
         }
-
-        console.log(result);
 
         const video = result.video?.find(v => v.quality === '360p') || { url: result.buffer };
         const sizeInBytes = await ufs(video.url);

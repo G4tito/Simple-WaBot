@@ -30,6 +30,10 @@ exports.cmd = {
         ({ status, result } = await download.V2(text, 'audio'));
 
         if (!status) {
+            ({ status, result } = await download.V3(text, 'audio'));
+        }
+
+        if (!status) {
             ({ status, result } = await download.V1(text, 'audio'));
         }
 
@@ -37,8 +41,6 @@ exports.cmd = {
             await msg.react('✖');
             return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
         }
-
-        console.log(result);
 
         const audio = result.audio?.find(v => v.quality === '128') || { url: result.buffer };
         const sizeInBytes = await ufs(audio.url);
