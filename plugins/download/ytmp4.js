@@ -27,7 +27,6 @@ exports.cmd = {
         await msg.react('🕓');
 
         const video = await getVideo(text);
-        return console.log(video)
 
         if (!video) {
             await msg.react('✖');
