@@ -8,10 +8,7 @@ exports.cmd = {
     category: ['information'],
     detail: {
         desc: 'Muestra tu perfil o el de otro usuario.',
-        use: '@user'
-    },
-    setting: {
-        isRegister: true
+        use: 'user'
     },
     async start({ msg, prefix, sock, db }) {
         let who = msg.quoted 
