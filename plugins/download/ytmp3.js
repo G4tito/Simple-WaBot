@@ -10,7 +10,7 @@ exports.cmd = {
     category: ['download'],
     detail: {
         desc: 'Descarga el audio del audio de YouTube.',
-        use: '@url=[yt]'
+        use: 'url'
     },
     setting: {
         error_react: true
@@ -43,7 +43,7 @@ exports.cmd = {
             return msg.reply(`*📂 | El audio pesa ${readableSize}, excede el límite máximo de descarga que es de ${limitReadable}.*`);
         }
 
-        await msg.reply(audio.title, { audio: urlToUse });
+        await msg.reply(audio.title, { audio: urlToUse, mimetype: 'audio/mpeg'});
         await msg.react('✅');
     }
 };
