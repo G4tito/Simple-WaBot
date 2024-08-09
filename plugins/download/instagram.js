@@ -25,6 +25,7 @@ exports.cmd = {
         }
 
         await msg.react('🕓');
+        const start = Date.now();
         
         let { status, result } = await instagram.download(text);
         if (!status) {
@@ -32,15 +33,17 @@ exports.cmd = {
             return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
         }
 
+        const end = Date.now();
+
         for (let media of result.media) {
             if (media.type === 'video') {
                 const size = await formatSize(await ufs(media.url));
                 if (Number(size.split(' MB')[0]) >= isLimit || Number(size.split(' GB')[0]) >= 0) {
                     await msg.react('✖');
-                    return msg.reply(`El video pesa ${size}, excede el límite máximo de descarga que es de ${isLimit} MB.`);
+                    return msg.reply(`*📂 | El video pesa ${size}, excede el límite máximo de descarga que es de ${isLimit} MB.*`);
                 }
             }
-            await msg.reply(null, { media: media.url });
+            await msg.reply(`🍟 *Scraping* · ${(end - start).toFixed(2)} ms`, { media: media.url });
         }
 
         await msg.react('✅');

@@ -38,7 +38,7 @@ exports.cmd = {
                 const size = await formatSize(await ufs(media.url));
                 if (Number(size.split(' MB')[0]) >= isLimit || Number(size.split(' GB')[0]) >= 0) {
                     await msg.react('✖');
-                    return msg.reply(`El video pesa ${size}, excede el límite máximo de descarga que es de ${isLimit} MB.`);
+                    return msg.reply(`*📂 | El video pesa ${size}, excede el límite máximo de descarga que es de ${isLimit} MB.*`);
                 }
             }
             await msg.reply(result.title, { media: media.url });
