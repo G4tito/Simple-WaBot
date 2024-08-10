@@ -10,7 +10,7 @@ exports.cmd = {
     category: ['download'],
     detail: {
         desc: 'Descarga el video de YouTube.',
-        use: '@url=[yt]'
+        use: 'url'
     },
     setting: {
         error_react: true
@@ -26,8 +26,7 @@ exports.cmd = {
 
         await msg.react('🕓');
 
-        const video = await getVideo(text);
-
+        const { title, video } = await getVideo(text);
         if (!video) {
             await msg.react('✖');
             return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
@@ -43,7 +42,7 @@ exports.cmd = {
             return msg.reply(`*📂 | El video pesa ${readableSize}, excede el límite máximo de descarga que es de ${limitReadable}.*`);
         }
 
-        await msg.reply(video.title, { video: urlToUse });
+        await msg.reply(title, { video: urlToUse });
         await msg.react('✅');
     }
 };
@@ -54,7 +53,10 @@ async function getVideo(url) {
         ({ status, result } = await download[version](url, 'video'));
         if (status) {
             const video = result.video.find(v => v.quality === '360p');
-            if (video) return video;
+            if (video) return {
+                title: result.title,
+                video
+            };
         }
     }
     return null;
