@@ -26,13 +26,13 @@ exports.cmd = {
 
         await msg.react('🕓');
 
-        const { title, video } = await getVideo(text);
-        if (!video) {
+        const result = await getVideo(text);
+        if (!result) {
             await msg.react('✖');
             return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
         }
 
-        const urlToUse = video.url || video.buffer;
+        const urlToUse = result.video.url || result.video.buffer;
         const sizeInBytes = await ufs(urlToUse);
 
         if (sizeInBytes >= isLimit) {
@@ -42,7 +42,7 @@ exports.cmd = {
             return msg.reply(`*📂 | El video pesa ${readableSize}, excede el límite máximo de descarga que es de ${limitReadable}.*`);
         }
 
-        await msg.reply(title, { video: urlToUse });
+        await msg.reply(result.title, { video: urlToUse });
         await msg.react('✅');
     }
 };
