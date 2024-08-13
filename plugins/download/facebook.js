@@ -10,7 +10,7 @@ exports.cmd = {
     category: ['download'],
     detail: {
         desc: 'Descarga videos de Facebook.',
-        use: '@url=[fb]'
+        use: 'url'
     },
     setting: {
         error_react: true
@@ -66,6 +66,6 @@ exports.cmd = {
 };
 
 function isFacebookUrl(url) {
-    const regex = /^https?:\/\/(www\.)?facebook\.com\/.+$/;
+    const regex = /^https?:\/\/([a-zA-Z0-9-]+\.)?facebook\.com\/.+$/;
     return regex.test(url);
 }
