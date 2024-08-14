@@ -27,43 +27,44 @@ exports.cmd = {
         await msg.react('🕓');
         const start = Date.now();
 
-        let status, result;
-        ({ status, result } = await download.V2(text));
-
-        if (!status) {
-            ({ status, result } = await download.V3(text));
-        }
-
-        if (!status) {
-            ({ status, result } = await download.V1(text));
-        }
-
-        if (!status) {
+        const result = await getMedia(text);
+        if (!result) {
             await msg.react('✖');
             return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
         }
 
-        const end = Date.now();
-        const filteredMedia = result.media.filter(m => (m?.quality || '').includes('HD'));
+        const sizeInBytes = await ufs(result.media.url);
 
-        for (const media of filteredMedia) {
-            if ((media?.quality || '').includes('HD')) {
-                const sizeInBytes = await ufs(media.url);
-
-                if (sizeInBytes >= isLimit) {
-                    const readableSize = await formatSize(sizeInBytes);
-                    const limitReadable = await formatSize(isLimit);
-                    await msg.react('✖');
-                    return msg.reply(`*📂 | El video pesa ${readableSize}, excede el límite máximo de descarga que es de ${limitReadable}.*`);
-                }
-            }
-
-            await msg.reply(`🍟 *Scraping* · ${(end - start).toFixed(2)} ms`, { media: media.url });
+        if (sizeInBytes >= isLimit) {
+            const readableSize = await formatSize(sizeInBytes);
+            const limitReadable = await formatSize(isLimit);
+            await msg.react('✖');
+            return msg.reply(`*📂 | El video pesa ${readableSize}, excede el límite máximo de descarga que es de ${limitReadable}.*`);
         }
 
+        await msg.reply(`🍟 *Scraping* · ${(Date.now() - start).toFixed(2)} ms`, { media: result.media.url });
         await msg.react('✅');
     }
 };
+
+async function getMedia(url) {
+    for (const version of ['V2', 'V3', 'V1']) {
+        const { status, result } = await download[version](url);
+        if (status) {
+            let media = result.media.find(m => (m?.quality || '').includes('HD'));
+            if (!media) {
+                media = result.media.find(m => (m?.quality || '').includes('SD'));
+            }
+            if (media) {
+                return {
+                    title: result.title,
+                    media
+                };
+            }
+        }
+    }
+    return null;
+}
 
 function isFacebookUrl(url) {
     const regex = /^https?:\/\/([a-zA-Z0-9-]+\.)?facebook\.com\/.+$/;
