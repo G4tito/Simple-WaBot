@@ -33,6 +33,7 @@ exports.cmd = {
             return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
         }
 
+        const end = Date.now();
         const sizeInBytes = await ufs(result.media.url);
 
         if (sizeInBytes >= isLimit) {
@@ -42,7 +43,7 @@ exports.cmd = {
             return msg.reply(`*📂 | El video pesa ${readableSize}, excede el límite máximo de descarga que es de ${limitReadable}.*`);
         }
 
-        await msg.reply(`🍟 *Scraping* · ${(Date.now() - start).toFixed(2)} ms`, { media: result.media.url });
+        await msg.reply(`🍟 *Scraping* · ${(end - start).toFixed(2)} ms`, { media: result.media.url });
         await msg.react('✅');
     }
 };
