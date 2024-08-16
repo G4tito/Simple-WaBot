@@ -26,14 +26,14 @@ exports.cmd = {
 
         await msg.react('🕓');
 
-        const audio = await getAudio(text);
+        const result = await getAudio(text);
 
-        if (!audio) {
+        if (!result) {
             await msg.react('✖');
             return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
         }
 
-        const urlToUse = audio.url || audio.buffer;
+        const urlToUse = result.audio.url || result.audio.buffer;
         const sizeInBytes = await ufs(urlToUse);
 
         if (sizeInBytes >= isLimit) {
