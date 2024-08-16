@@ -44,11 +44,13 @@ exports.cmd = {
                     return msg.reply(`*📂 | El video pesa ${size}, excede el límite máximo de descarga que es de ${isLimit} MB.*`);
                 }
             }
+
             if (firstMedia) {
-                await msg.reply(`🍟 *Scraping* · ${(end - start).toFixed(2)} ms`);
+                await msg.reply(`🍟 *Scraping* · ${(end - start).toFixed(2)} ms`, { media: media.url });
                 firstMedia = false;
+            } else {
+                await msg.reply({ media: media.url });
             }
-            await msg.reply({ media: media.url });
         }
 
         await msg.react('✅');
