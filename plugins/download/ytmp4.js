@@ -27,6 +27,7 @@ exports.cmd = {
         await msg.react('🕓');
 
         const result = await getVideo(text);
+        console.log(result)
         if (!result) {
             await msg.react('✖');
             return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
@@ -48,11 +49,10 @@ exports.cmd = {
 };
 
 async function getVideo(url) {
-    let status, result;
     for (const version of ['V2', 'V3', 'V1']) {
-        ({ status, result } = await download[version](url, 'video'));
+        const { status, result } = await download[version](url, 'video');
         if (status) {
-            const video = result.video.find(v => v.quality === '360p');
+            const video = result.video.find(v => parseInt(v.quality) === 360);
             if (video) return {
                 title: result.title,
                 video

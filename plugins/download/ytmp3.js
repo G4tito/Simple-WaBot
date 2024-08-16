@@ -43,18 +43,20 @@ exports.cmd = {
             return msg.reply(`*📂 | El audio pesa ${readableSize}, excede el límite máximo de descarga que es de ${limitReadable}.*`);
         }
 
-        await msg.reply(audio.title, { audio: urlToUse, mimetype: 'audio/mpeg'});
+        await msg.reply({ audio: urlToUse, mimetype: 'audio/mpeg'});
         await msg.react('✅');
     }
 };
 
 async function getAudio(url) {
-    let status, result;
     for (const version of ['V2', 'V3', 'V1']) {
-        ({ status, result } = await download[version](url, 'audio'));
+        const { status, result } = await download[version](url, 'audio');
         if (status) {
-            const audio = result.audio?.find(v => v.quality === '128');
-            if (audio) return audio;
+            const audio = result.audio.find(v => parseInt(v.quality) === 128);
+            if (audio) return {
+                title: result.title,
+                audio
+            };
         }
     }
     return null;
