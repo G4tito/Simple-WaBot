@@ -35,6 +35,7 @@ exports.cmd = {
 
         const end = Date.now();
 
+        let firstMedia = true;
         for (let media of result.media) {
             if (media.type === 'video') {
                 const size = await formatSize(await ufs(media.url));
@@ -43,7 +44,11 @@ exports.cmd = {
                     return msg.reply(`*📂 | El video pesa ${size}, excede el límite máximo de descarga que es de ${isLimit} MB.*`);
                 }
             }
-            await msg.reply(`🍟 *Scraping* · ${(end - start).toFixed(2)} ms`, { media: media.url });
+            if (firstMedia) {
+                await msg.reply(result.title);
+                firstMedia = false;
+            }
+            await msg.reply({ media: media.url });
         }
 
         await msg.react('✅');
