@@ -6,7 +6,7 @@ exports.cmd = {
     category: ['convert'],
     detail: {
         desc: 'Convierte un sticker a Imagen.',
-        use: '@quoted=[img-stick]'
+        use: 'media'
     },
     async start({ msg }) {
         let q = msg.quoted ? msg.quoted : msg;
@@ -21,6 +21,6 @@ exports.cmd = {
 
         let media = await q.download();
         let buffer = await WebpToImg(media);
-        await msg.reply(null, { image: buffer });
+        await msg.reply({ image: buffer });
     }
 };

@@ -7,7 +7,7 @@ exports.cmd = {
     category: ['convert'],
     detail: {
         desc: 'Convierte una imagen/video/gif a Sticker.',
-        use: '@quoted=[img|vid|gif]'
+        use: 'media'
     },
     async start({ msg }) {
         let q = msg.quoted ? msg.quoted : msg;
@@ -17,11 +17,12 @@ exports.cmd = {
         
         let opts = {
             ...sticker,
+            emojis: ['🧶', '🐈'],
             isFull: true
         };
         
         let media = await q.download();
         let buffer = await toWebp(media, opts);
-        await msg.reply(null, { sticker: buffer });
+        await msg.reply({ sticker: buffer });
     }
 };

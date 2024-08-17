@@ -6,7 +6,7 @@ exports.cmd = {
     category: ['convert'],
     detail: {
         desc: 'Convierte un sticker animado a video.',
-        use: '@quoted=[vid-stick]'
+        use: 'media'
     },
     async start({ msg }) {
         let q = msg.quoted ? msg.quoted : msg;
@@ -26,6 +26,6 @@ exports.cmd = {
             return msg.reply('*📛 | Hubo un error al obtener el resultado.*');
         }
 
-        await msg.reply(null, { video: result.url });
+        await msg.reply({ video: result.url });
     }
 };
