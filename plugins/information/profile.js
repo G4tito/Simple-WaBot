@@ -43,11 +43,11 @@ exports.cmd = {
                 + '- *User* ∙ ' + user.name + '\n'
                 + '- *ID* ∙ \`#' + user.id + '\`\n'
                 + '- *Fecha* ∙ ' + formatTime('date', user.timestamp) + '\n'
-                + '- *Hora* ∙ ' + formatTime('hour', user.timestamp) + '\n';
-        } else {
-            teks += '> ' + (who === sock.user.jid ? `Escribe *${prefix}menu* para ver mi lista *comandos*.` : 'Usuario no registrado en mi base de datos.');
+                + '- *Hora* ∙ ' + formatTime('hour', user.timestamp) + '\n\n';
         }
+
+        teks += '> sɪᴍᴘʟᴇ ᴡʜᴀᴛsᴀᴘᴘ ʙᴏᴛ ツ';
 
         await msg.reply(teks, { image: pp, mentions: [who] });
     }
-}
+};
