@@ -1,57 +1,58 @@
 const { generateWAMessageFromContent } = require('@whiskeysockets/baileys');
 const { formatTime, resizeImage } = require('../../lib/func.js');
 const { timeZone } = require('../../setting.js');
+const db = require('../../lib/database.js');
 const moment = require('moment-timezone');
 const path = require('path');
 const fs = require('fs');
 
 const tags = {
-    'main': {
-        emoji: '📚',
-        name: 'Principal'
+    'administration': {
+        emoji: '🔧',
+        name: 'Administración'
     },
-    'moderation': {
-        emoji: '⚖',
-        name: 'Moderación'
+    'main': {
+        emoji: '🏠',
+        name: 'Principal' 
     },
     'setting': {
-        emoji: '⚙',
+        emoji: '⚙️',
         name: 'Configuración'
     },
+    'moderation': {
+        emoji: '🛡️',
+        name: 'Moderación'
+    },
     'information': {
-        emoji: '📍',
+        emoji: '🕊️',
         name: 'Información'
     },
-    'anime': {
-        emoji: '🧧',
-        name: 'Anime'
+    'search': {
+        emoji: '🔍',
+        name: 'Búsqueda'
     },
     'convert': {
-        emoji: '🧩',
+        emoji: '🪄',
         name: 'Convertidor'
-    },
-    'fun': {
-        emoji: '🪅',
-        name: 'Diversión'
-    },
-    'game': {
-        emoji: '🎳',
-        name: 'Juegos'
-    },
-    'search': {
-        emoji: '🔎',
-        name: 'Búsqueda'
     },
     'download': {
         emoji: '📥',
         name: 'Descargas'
     },
-    'script': {
-        emoji: '👾',
-        name: 'Script'
+    'game': {
+        emoji: '🎮',
+        name: 'Juegos'
+    },
+    'anime': {
+        emoji: '🧧',
+        name: 'Anime'
+    },
+    'fun': {
+        emoji: '🪅',
+        name: 'Diversión'
     },
     'advanced': {
-        emoji: '🧠',
+        emoji: '🧩',
         name: 'Avanzado'
     }
 };
@@ -70,7 +71,7 @@ exports.cmd = {
                 + '\t◦  *Hora* · ' + formatTime('hour') + '\n'
 
         for (const tag in tags) {
-            teks += `\n\t• ${tags[tag].emoji} › *${tags[tag].name}*\n`;
+            teks += `\n\t\t*${tags[tag].name.toUpperCase()}*\n`;
 
             const filteredCommands = plugins.commands.map(c => Object.values(c)[0]).filter(cmd => (cmd.category || []).includes(tag));
             filteredCommands.forEach((cmd, index) => {
@@ -78,14 +79,14 @@ exports.cmd = {
                 const isLast = index === filteredCommands.length - 1;
 
                 if (isFirst) {
-                    teks += `\t┌ ${prefix + cmd.name[0]}${cmd.detail?.use ? ` *${cmd.detail.use}*` : ''}\n`;
+                    teks += `- ✗⃝${tags[tag].emoji}  ${prefix + cmd.name[0]}${cmd.detail?.use ? ` < *${cmd.detail.use}* >` : ''}\n`;
                 } else if (isLast) {
-                    teks += `\t└ ${prefix + cmd.name[0]}${cmd.detail?.use ? ` *${cmd.detail.use}*` : ''}\n`;
+                    teks += `- ✗⃝${tags[tag].emoji}  ${prefix + cmd.name[0]}${cmd.detail?.use ? ` < *${cmd.detail.use}* >` : ''}\n`;
                 } else {
-                    teks += `\t├ ${prefix + cmd.name[0]}${cmd.detail?.use ? ` *${cmd.detail.use}*` : ''}\n`;
+                    teks += `- ✗⃝${tags[tag].emoji}  ${prefix + cmd.name[0]}${cmd.detail?.use ? ` < *${cmd.detail.use}* >` : ''}\n`;
                 }
             });
-        }
+        };
 
         let documentMessage = {
             url: 'https://mmg.whatsapp.net/v/t62.7119-24/32511132_500473132560305_5925723291063172577_n.enc?ccb=11-4&oh=01_Q5AaIKnXNmUWgmxyNn_1uxfEnGyiI-eCZ-BMRZdX3O2jhQq2&oe=66BE7A32&_nc_sid=5e03e0&mms3=true',
@@ -98,6 +99,9 @@ exports.cmd = {
             directPath: '/v/t62.7119-24/32511132_500473132560305_5925723291063172577_n.enc?ccb=11-4&oh=01_Q5AaIKnXNmUWgmxyNn_1uxfEnGyiI-eCZ-BMRZdX3O2jhQq2&oe=66BE7A32&_nc_sid=5e03e0',
         };
 
+        const setting = db.settings.get(sock.user.jid);
+        const cover = setting.cover === '' ? global.img.cover : setting.cover;
+
         let message = generateWAMessageFromContent(msg.from, {
             viewOnceMessage: {
                 message: {
@@ -109,7 +113,7 @@ exports.cmd = {
                                 mediaType: 1,
                                 previewType: 0,
                                 renderLargerThumbnail: true,
-                                thumbnail: await resizeImage(global.img.cover, 500),
+                                thumbnail: await resizeImage(cover, 500),
                                 thumbnailUrl: msg.id,
                                 title: `Hola ! «@${msg.pushName}» 👋🏻`,
                                 body: greeting()

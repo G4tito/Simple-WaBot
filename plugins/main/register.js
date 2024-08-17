@@ -8,7 +8,7 @@ exports.cmd = {
     category: ['main'],
     detail: {
         desc: 'Regístrate y obtén acceso a todos los comandos disponibles.',
-        use: '@text=[username]'
+        use: 'username'
     },
     async start({ msg, sock, text, prefix, command, isRegistered, db }) {
         if (isRegistered) {
