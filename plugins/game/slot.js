@@ -27,7 +27,7 @@ exports.cmd = {
     },
     async start({ text, msg, prefix, command, db }) {
         if (!text || isNaN(text)) {
-            return msg.reply(`*🚩 Por favor, ingresa el monto de tu apuesta.*\n\n*🍟 Ejemplo de Uso* ;\n\n1. ${prefix + command} < dinero >\n2. ${prefix + command} 70`);
+            return msg.reply(`*🚩 Por favor, ingresa el monto de tu apuesta.*\n\n*🍟 Ejem. de Uso* ;\n\n1. ${prefix + command} < money >\n2. ${prefix + command} 70`);
         }
 
         let bet = parseInt(text);
