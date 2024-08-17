@@ -9,7 +9,7 @@ exports.cmd = {
     category: ['advanced'],
     detail: {
         desc: 'Ejecuta códigos de JavaScript.',
-        use: '@text=[code]'
+        use: 'code'
     },
     setting: {
         isOwner: true

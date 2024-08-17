@@ -6,7 +6,7 @@ exports.cmd = {
     category: ['advanced'],
     detail: {
         desc: 'Ejecutor de funciones en terminal.',
-        use: '@text=[func]'
+        use: 'func.'
     },
     setting: {
         isOwner: true
