@@ -7,7 +7,7 @@ exports.cmd = {
     category: ['search'],
     detail: {
         desc: 'Realiza una búsqueda en YouTube.',
-        use: '@text'
+        use: 'text'
     },
     setting: {
         error_react: true
