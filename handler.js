@@ -1,24 +1,27 @@
 const { plugins } = require('./lib/plugins.js');
-const { owner, prefixList } = require('./setting.js');
+const { owner, defaultPrefix } = require('./setting.js');
 const { decodeJid } = require('./lib/func.js');
 const { printLog } = require('./lib/print.js');
 const db = require('./lib/database.js');
 
 const handler = async (msg, sock) => {
     try {
-        const prefixRegex = new RegExp(
-            '^(' +
-            prefixList.filter(Boolean)
-                .map(c => c.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"))
-                .join('|') +
-            ')'
-        );
+        const setting = db.settings.get(sock.user.jid);
+        const prefixList = (setting && setting.prefix.length) ? setting.prefix : defaultPrefix;
 
-        const match = msg.text.match(prefixRegex);
-        const prefix = match ? match[0] : '';
-        const trimText = msg.text.slice(prefix.length).trim();
-        const [command, ...args] = trimText.split(/\s+/).map(x => x.toLowerCase());
-        const text = trimText.replace(new RegExp(`^${command.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'i'), '').trim();
+        let prefix = false;
+        for (const p of prefixList) {
+            const trimmedPrefix = p.trim();
+            if (trimmedPrefix === '' || msg.text.startsWith(trimmedPrefix)) {
+                prefix = trimmedPrefix;
+                break;
+            }
+        }
+
+        const trimText = prefix !== false ? msg.text.slice(prefix.length).trim() : msg.text.trim();
+        const [rawCommand, ...args] = prefix !== false ? (trimText ? trimText.split(/\s+/) : ['']) : [false, ...trimText.split(/\s+/)];
+        const command = rawCommand ? rawCommand.toLowerCase() : rawCommand;
+        const text = command ? trimText.slice(rawCommand.length).trim() : trimText;
 
         const isGroup = msg.from.endsWith('@g.us');
         const isPrivate = msg.from.endsWith('@s.whatsapp.net');
@@ -43,15 +46,14 @@ const handler = async (msg, sock) => {
             await db.groups.add(msg.from);
             await db.save();
         }
-        
+
         if (db.groups.exist(msg.from) && isRegistered) {
-            const group = db.groups.get(msg.from)
+            const group = db.groups.get(msg.from);
             await group.users.add(msg.sender);
             await db.save();
         }
 
-        const config = db.settings.get(sock.user.jid);
-        if (config.mode === 'public' || (config.mode === 'self' && isOwner)) {
+        if (setting.mode === 'public' || (setting.mode === 'self' && isOwner)) {
             for (const before of plugins.befores) {
                 const name = Object.keys(before)[0];
                 try {
@@ -69,10 +71,10 @@ const handler = async (msg, sock) => {
                 }
             }
 
-            if (!isBaileys || !isBroadcast) {
-                const stickerCommand = (msg.type === 'stickerMessage' ?
-                    db.stickers.get(Buffer.from(message[msg.type].fileSha256).toString('base64'))?.command :
-                    ''
+            if (!isBaileys && !isBroadcast) {
+                const stickerCommand = (msg.type === 'stickerMessage'
+                    ? db.stickers.get(Buffer.from(msg.message[msg.type].fileSha256).toString('base64'))?.command
+                    : ''
                 );
 
                 const commands = plugins.commands
@@ -145,9 +147,9 @@ const handler = async (msg, sock) => {
     }
 };
 
-const status = ({ type, msg, prefix: _p = '' }) => {
+const status = ({ type, msg, prefix = '' }) => {
     const texts = {
-        isRegister: `*🚩 Para utilizar este comando, debe estar registrado en la base de datos.*\n\n*🍟 Ejem. de Uso* ;\n\n1. ${_p}reg < username >\n2. ${_p}reg Andrés_74`,
+        isRegister: `*🚩 Para utilizar este comando, debe estar registrado en la base de datos.*\n\n*🍟 Ejemplo de Uso* ;\n\n1. ${prefix}reg <username>\n2. ${prefix}reg Andrés_74`,
         isOwner: '*🚩 Este comando está reservado únicamente para el creador del bot.*',
         isGroup: '*🚩 Este comando está disponible únicamente para su uso en grupos.*',
         isPrivate: '*🚩 Este comando está disponible únicamente para su uso en mi chat privado.*',
