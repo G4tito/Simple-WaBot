@@ -6,7 +6,7 @@ exports.cmd = {
     category: ['fun'],
     detail: {
         desc: 'Hazle una pregunta a la bola 8 mágica.',
-        use: '@text'
+        use: 'text'
     },
     async start({ text, msg }) {
         if (!text) {
