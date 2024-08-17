@@ -10,7 +10,7 @@ exports.cmd = {
     category: ['download'],
     detail: {
         desc: 'Descarga videos de TikTok.',
-        use: '@url=[tt]'
+        use: 'url'
     },
     setting: {
         error_react: true
