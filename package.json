@@ -20,7 +20,6 @@
     },
     "dependencies": {
         "@adiwajshing/keyed-db": "^0.2.4",
-        "@distube/ytdl-core": "^4.13.5",
         "@whiskeysockets/baileys": "^6.7.6",
         "awesome-phonenumber": "^6.9.0",
         "axios": "^0.24.0",
