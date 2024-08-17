@@ -6,7 +6,7 @@ exports.cmd = {
     category: ['moderation'],
     detail: {
         desc: 'Etiqueta a todos con el mensaje ingresado.',
-        use: '@text'
+        use: 'text'
     },
     setting: {
         isAdmin: true

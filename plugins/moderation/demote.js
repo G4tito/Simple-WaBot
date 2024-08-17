@@ -4,7 +4,7 @@ exports.cmd = {
     category: ['moderation'],
     detail: {
         desc: 'Degrada a un usuario de administrador a miembro.',
-        use: '@user'
+        use: 'user'
     },
     setting: {
         isGroup: true,

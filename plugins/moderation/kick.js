@@ -4,7 +4,7 @@ exports.cmd = {
     category: ['moderation'],
     detail: {
         desc: 'Elimina a un usuario del grupo.',
-        use: '@user'
+        use: 'user'
     },
     setting: {
         isGroup: true,
