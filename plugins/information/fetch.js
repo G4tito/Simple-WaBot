@@ -7,38 +7,43 @@ exports.cmd = {
     category: ['information'],
     detail: {
         desc: 'Extrae el contenido de una página web.',
-        use: '@url'
+        use: 'url'
     },
     async start({ msg, text }) {
-        if (!isURL(text)) {
-            return msg.reply('Proporcione una URL válida.');
+        if (!text) {
+            return msg.reply('*🚩 Ingresa la URL de página web a la que deseas extraer el contenido.*');
         }
 
-        const url = new URL(text).href;
-        const res = await fetch(url);
+        const encodedURL = encodeURIComponent(text);
+/*
+        if (!isValidURL(encodedURL)) {
+            return msg.reply('*🚩 Proporcione una URL válida.*');
+        }
+*/
+        const url = new URL(encodedURL).href;
+        const response = await fetch(url);
 
-        const contentLength = res.headers.get('content-length');
+        const contentLength = response.headers.get('content-length');
         if (contentLength > 50 * 1024 * 1024) {
             return msg.reply(`Content-Length: ${contentLength}`);
         }
 
-        const contentType = res.headers.get('content-type');
+        const contentType = response.headers.get('content-type');
         if (!/text|json/.test(contentType)) {
             return msg.reply(url, { media: url });
         }
 
-        let teks = await res.buffer();
+        let content = await response.buffer();
         try {
-            teks = format(JSON.parse(teks.toString()));
+            content = format(JSON.parse(content.toString()));
         } catch (e) {
-            teks = teks.toString();
+            content = content.toString();
         }
 
-        await msg.reply(teks.slice(0, 65536));
+        await msg.reply(content.slice(0, 65536));
     }
 };
 
-
-function isURL(q) {
-    return /^(https?:\/\/[^\s/$.?#].[^\s]*)$/i.test(q);
+function isValidURL(query) {
+    return /^https:\/\/[^\s/$.?#].[^\s]*$/i.test(query);
 }
