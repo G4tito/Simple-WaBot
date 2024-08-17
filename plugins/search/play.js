@@ -53,14 +53,14 @@ exports.cmd = {
                                 {
                                     name: 'quick_reply',
                                     buttonParamsJson: JSON.stringify({
-                                        display_text: 'Audio 🎵',
+                                        display_text: 'Audio 🎵 (128kbps)',
                                         id: prefix + 'ytmp3 ' + URL
                                     })
                                 },
                                 {
                                     name: 'quick_reply',
                                     buttonParamsJson: JSON.stringify({
-                                        display_text: 'Video 🎥',
+                                        display_text: 'Video 🎥 (360p)',
                                         id: prefix + 'ytmp4 ' + URL
                                     })
                                 }
