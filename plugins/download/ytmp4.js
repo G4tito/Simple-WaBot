@@ -27,13 +27,13 @@ exports.cmd = {
         await msg.react('🕓');
 
         const result = await getVideo(text);
-        console.log(result)
+
         if (!result) {
             await msg.react('✖');
             return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
         }
 
-        const urlToUse = result.video.url || result.video.buffer;
+        const urlToUse = result.video.url;
         const sizeInBytes = await ufs(urlToUse);
 
         if (sizeInBytes >= isLimit) {
@@ -49,14 +49,10 @@ exports.cmd = {
 };
 
 async function getVideo(url) {
-    for (const version of ['V2', 'V3', 'V1']) {
-        const { status, result } = await download[version](url, 'video');
+    for (const version of ['V1']) {
+        const { status, result } = await download[version](url, { type: 'video', quality: 360 });
         if (status) {
-            const video = result.video.find(v => parseInt(v.quality) === 360);
-            if (video) return {
-                title: result.title,
-                video
-            };
+            return result;
         }
     }
     return null;

@@ -49,14 +49,10 @@ exports.cmd = {
 };
 
 async function getAudio(url) {
-    for (const version of ['V2', 'V3', 'V1']) {
-        const { status, result } = await download[version](url, 'audio');
+    for (const version of ['V1']) {
+        const { status, result } = await download[version](url, { type: 'audio', quality: 128 });
         if (status) {
-            const audio = result.audio.find(v => parseInt(v.quality) === 128);
-            if (audio) return {
-                title: result.title,
-                audio
-            };
+            return result;
         }
     }
     return null;
