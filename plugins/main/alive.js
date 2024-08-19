@@ -1,5 +1,3 @@
-const { formatDuration } = require('../../lib/func.js');
-
 exports.cmd = {
     name: ['alive'],
     command: ['alive'],
@@ -7,8 +5,7 @@ exports.cmd = {
     detail: {
         desc: 'Verifica si el bot está en línea.',
     },
-    async start({ msg, prefix, command }) {
-        const uptime = formatDuration(process.uptime() * 1000);
-        await msg.reply(`🧸 | *Online!* Activo durante *${uptime}*.`);
+    async start({ msg }) {
+        await msg.reply({ sticker: './media/sticker/alive.webp'});
     }
 };
