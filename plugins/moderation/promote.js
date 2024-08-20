@@ -20,7 +20,7 @@ exports.cmd = {
         if (!member) {
             return msg.reply('🚩 El usuario no está en el grupo.*');
         }
-        await sock.groupParticipantsUpdate(m.chat, [who], 'promote');
+        await sock.groupParticipantsUpdate(msg.from, [who], 'promote');
         await msg.reply(`*🚩 El usuario @${who.split('@')[0]} ha sido ascendido a administrador.*`);
     }
 };
