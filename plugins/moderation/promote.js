@@ -21,6 +21,6 @@ exports.cmd = {
             return msg.reply('🚩 El usuario no está en el grupo.*');
         }
         await sock.groupParticipantsUpdate(msg.from, [who], 'promote');
-        await msg.reply(`*🚩 El usuario @${who.split('@')[0]} ha sido ascendido a administrador.*`);
+        await msg.reply(`*🚩 El usuario @${who.split('@')[0]} ha sido ascendido a administrador.*`, { mentions: [who] });
     }
 };

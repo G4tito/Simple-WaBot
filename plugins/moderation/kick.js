@@ -21,6 +21,6 @@ exports.cmd = {
             return msg.reply('*🚩 El usuario no está en el grupo.*');
         }
         sock.groupParticipantsUpdate(msg.from, [who], 'remove');
-        await msg.reply(`*🚩 El usuario @${who.split('@')[0]} ha sido eliminado con éxito.*`);
+        await msg.reply(`*🚩 El usuario @${who.split('@')[0]} ha sido eliminado con éxito.*`, { mentions: [who] });
     }
 };

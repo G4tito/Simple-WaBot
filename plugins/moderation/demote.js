@@ -21,6 +21,6 @@ exports.cmd = {
             return msg.reply('*🚩 El usuario no está en el grupo.*');
         }
         await sock.groupParticipantsUpdate(msg.from, [who], 'demote');
-        await msg.reply(`*🚩 El usuario @${who.split('@')[0]} ha sido degradado a miembro.*`);
+        await msg.reply(`*🚩 El usuario @${who.split('@')[0]} ha sido degradado a miembro.*`, { mentions: [who] });
     }
 };
