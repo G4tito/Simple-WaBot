@@ -14,9 +14,14 @@ moment.locale('es');
 const tempName = 'temp';
 global.tempDir = path.resolve(__dirname, tempName);
 
+const social = {
+    whatsapp: 'https://whatsapp.com/channel/0029Va9awpk2Jl8AQ3oiww3A',
+    github: 'https://github.com/G4tito/'
+}
+
 const owner = [
-    ['51906956256', '「gatitoツ」']
-    // ['number', 'name']
+    ['51940617554', '「gatitoツ」'],
+    ['51906956256']
 ];
 
 const sticker = {
@@ -26,4 +31,4 @@ const sticker = {
 
 const defaultPrefix = ['/', '!', '#', '.', '-', 's!', '', '🪶'];
 
-module.exports = { timeZone, owner, defaultPrefix, sticker };
+module.exports = { timeZone, social, owner, defaultPrefix, sticker };
