@@ -1,6 +1,6 @@
 const { generateWAMessageFromContent } = require('@whiskeysockets/baileys');
 const { formatTime, resizeImage } = require('../../lib/func.js');
-const { timeZone } = require('../../setting.js');
+const { social, timeZone } = require('../../setting.js');
 const db = require('../../lib/database.js');
 const moment = require('moment-timezone');
 const path = require('path');
@@ -131,8 +131,8 @@ exports.cmd = {
                                     name: 'cta_url',
                                     buttonParamsJson: JSON.stringify({
                                         display_text: 'Channel 🍟',
-                                        url: 'https://whatsapp.com/channel/0029Va9awpk2Jl8AQ3oiww3A',
-                                        merchant_url: 'https://whatsapp.com/channel/0029Va9awpk2Jl8AQ3oiww3A'
+                                        url: social.whatsapp,
+                                        merchant_url: social.whatsapp
                                     })
                                 }
                             ],
