@@ -79,11 +79,11 @@ exports.cmd = {
                 const isLast = index === filteredCommands.length - 1;
 
                 if (isFirst) {
-                    teks += `- ✗⃝${tags[tag].emoji}  ${prefix + cmd.name[0]}${cmd.detail?.use ? ` < *${cmd.detail.use}* >` : ''}\n`;
+                    teks += `- ✗⃝${tags[tag].emoji}  ${prefix + cmd.name[0]}${cmd.detail?.use ? ` < *${cmd.detail.use}* >` : ''}${cmd.setting?.isNsfw ? `  (*+18*)` : ''}\n`;
                 } else if (isLast) {
-                    teks += `- ✗⃝${tags[tag].emoji}  ${prefix + cmd.name[0]}${cmd.detail?.use ? ` < *${cmd.detail.use}* >` : ''}\n`;
+                    teks += `- ✗⃝${tags[tag].emoji}  ${prefix + cmd.name[0]}${cmd.detail?.use ? ` < *${cmd.detail.use}* >` : ''}${cmd.setting?.isNsfw ? `  (*+18*)` : ''}\n`;
                 } else {
-                    teks += `- ✗⃝${tags[tag].emoji}  ${prefix + cmd.name[0]}${cmd.detail?.use ? ` < *${cmd.detail.use}* >` : ''}\n`;
+                    teks += `- ✗⃝${tags[tag].emoji}  ${prefix + cmd.name[0]}${cmd.detail?.use ? ` < *${cmd.detail.use}* >` : ''}${cmd.setting?.isNsfw ? `  (*+18*)` : ''}\n`;
                 }
             });
         };
