@@ -17,13 +17,13 @@ exports.cmd = {
         if (mode === 'on' || mode === 'off') {
             const enable = mode === 'on';
             if (group.antilink === enable) {
-                return msg.reply(`La función de *anti enlace* ya está *${enable ? 'activada' : 'desactivada'}* en este *grupo*.`);
+                return msg.reply(`*🚩 La función de Anti Enlace ya está ${enable ? 'activada' : 'desactivada'} en este grupo.*`);
             }
             group.antilink = enable;
             await db.save();
-            return msg.reply(`La función de *anti enlace* se ha *${enable ? 'activado' : 'desactivado'}* con éxito para este *grupo*.`);
+            return msg.reply(`*🚩 La función de Anti Enlace se ha ${enable ? 'activado' : 'desactivado'} con éxito para este grupo.*`);
         }
 
-        await msg.reply(`*🚩 Para configurar la Función Anti Enlace, simplemente escribe "on" para activarla o "off" para desactivarla.*`);
+        await msg.reply('*🚩 Para configurar la Función Anti Enlace, simplemente escribe "on" para activarla o "off" para desactivarla.*');
     }
 };
