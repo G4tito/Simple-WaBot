@@ -8,7 +8,8 @@ exports.cmd = {
         desc: 'Envia una imagen aleatoria de una waifu.'
     },
     setting: {
-        error_react: true
+        error_react: true,
+        isNsfw: true
     },
     async start({ msg }) {
         await msg.react('🕓');
