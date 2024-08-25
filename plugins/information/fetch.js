@@ -14,13 +14,11 @@ exports.cmd = {
             return msg.reply('*🚩 Ingresa la URL de página web a la que deseas extraer el contenido.*');
         }
 
-        const encodedURL = encodeURIComponent(text);
-/*
-        if (!isValidURL(encodedURL)) {
+        if (!isValidURL(text)) {
             return msg.reply('*🚩 Proporcione una URL válida.*');
         }
-*/
-        const url = new URL(encodedURL).href;
+
+        const url = new URL(text).href;
         const response = await fetch(url);
 
         const contentLength = response.headers.get('content-length');
