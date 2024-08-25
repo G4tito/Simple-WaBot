@@ -28,6 +28,7 @@ const handler = async (msg, sock) => {
         const isBroadcast = msg.from === 'status@broadcast';
         const isOwner = [sock.user.jid, ...owner.map(([number]) => number.replace(/[^0-9]/g, '') + '@s.whatsapp.net')].includes(msg.sender);
         const isRegistered = db.users.exist(msg.sender);
+        const isNsfw = isGroup ? db.groups.get(msg.from).setting.nsfw : true;
         const isBaileys = msg.id.startsWith('3EB0');
 
         const groupMetadata = isGroup ? await sock.groupMetadata(msg.from) : {};
@@ -89,6 +90,7 @@ const handler = async (msg, sock) => {
                     for (const cmd of commands) {
                         const setting = {
                             isRegister: false,
+                            isNsfw: false,
                             isGroup: false,
                             isPrivate: false,
                             isOwner: false,
@@ -100,6 +102,10 @@ const handler = async (msg, sock) => {
 
                         if (setting.isRegister && !isRegistered) {
                             await status({ type: 'isRegister', msg, prefix });
+                            continue;
+                        }
+                        if (setting.isNsfw && !isNsfw) {
+                            await status({ type: 'isNsfw', msg });
                             continue;
                         }
                         if (setting.isGroup && !isGroup) {
@@ -149,7 +155,8 @@ const handler = async (msg, sock) => {
 
 const status = ({ type, msg, prefix = '' }) => {
     const texts = {
-        isRegister: `*🚩 Para utilizar este comando, debe estar registrado en la base de datos.*\n\n*🍟 Ejemplo de Uso* ;\n\n1. ${prefix}reg <username>\n2. ${prefix}reg Andrés_74`,
+        isRegister: `*🚩 Para utilizar este comando, debe estar registrado en la base de datos.*\n\n*🍟 Ejem. de Uso* ;\n\n1. ${prefix}reg <username>\n2. ${prefix}reg Andrés_74`,
+        isNsfw: '*🚩 El contenido NSFW esta deshabitada para este grupo.*',
         isOwner: '*🚩 Este comando está reservado únicamente para el creador del bot.*',
         isGroup: '*🚩 Este comando está disponible únicamente para su uso en grupos.*',
         isPrivate: '*🚩 Este comando está disponible únicamente para su uso en mi chat privado.*',
