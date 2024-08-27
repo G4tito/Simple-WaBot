@@ -8,6 +8,9 @@ exports.cmd = {
         desc: 'Administra los prefijos del bot.',
         use: 'opts',
     },
+    setting: {
+        isOwner: true
+    },
     async start({ msg, sock, args, text, prefix, command, db }) {
         if (!text) {
             return msg.reply(
