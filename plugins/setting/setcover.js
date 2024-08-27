@@ -8,6 +8,9 @@ exports.cmd = {
         desc: 'Cambia la miniatura del menú del bot.',
         use: 'img'
     },
+    setting: {
+        isOwner: true
+    },
     async start({ msg, sock, args, db }) {
         let setting = db.settings.get(sock.user.jid);
 
