@@ -8,7 +8,8 @@ exports.cmd = {
     },
     setting: {
         isGroup: true,
-        isBotAdmin: true
+        isBotAdmin: true,
+        isAdmin: true
     },
     async start({ msg, sock, args, groupMetadata }) {
         let group = groupMetadata;
