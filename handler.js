@@ -28,7 +28,7 @@ const handler = async (msg, sock) => {
         const isBroadcast = msg.from === 'status@broadcast';
         const isOwner = [sock.user.jid, ...owner.map(([number]) => number.replace(/[^0-9]/g, '') + '@s.whatsapp.net')].includes(msg.sender);
         const isRegistered = db.users.exist(msg.sender);
-        const isNsfw = isGroup ? db.groups.get(msg.from).setting.nsfw : true;
+        const isNsfw = isGroup ? db.groups.get(msg.from).setting?.nsfw : true;
         const isBaileys = msg.id.startsWith('3EB0');
 
         const groupMetadata = isGroup ? await sock.groupMetadata(msg.from) : {};
