@@ -54,6 +54,10 @@ const tags = {
     'advanced': {
         emoji: '🧩',
         name: 'Avanzado'
+    },
+    'other': {
+        emoji: '📦',
+        name: 'Otros'
     }
 };
 
