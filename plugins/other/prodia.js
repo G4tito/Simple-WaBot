@@ -5,7 +5,7 @@ exports.cmd = {
     command: ['prodia'],
     category: ['other'],
     detail: {
-        desc: 'Genera una imagen con la inteligencia artificial de prodia.',
+        desc: 'Genera una imagen con la inteligencia artificial de Prodia.',
         use: 'prompt'
     },
     async start({ msg, text }) {
@@ -14,6 +14,11 @@ exports.cmd = {
         }
 
         const json = await prodia.generate(text);
+
+        if (!json.status) {
+            return msg.reply('*🚩 Ups, no se pudo generar la imagen.*');
+        }
+
         await msg.reply({ image: json.result.url });
     }
 };
