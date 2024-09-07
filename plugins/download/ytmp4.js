@@ -49,7 +49,7 @@ exports.cmd = {
 };
 
 async function getVideo(url) {
-    for (const version of ['V1']) {
+    for (const version of ['V1', 'V2']) {
         const { status, result } = await download[version](url, { type: 'video', quality: 360 });
         if (status) {
             return result;
