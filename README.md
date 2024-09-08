@@ -53,35 +53,51 @@ Before using the bot, make sure you have the following requirements installed.
 > [!NOTE]
 > It has not yet been purchased whether they are compatible with other platforms.
 
-Termux (support)
+<a href="https://boxmineworld.com/">
+  <img src="https://boxmineworld.com/img/favicon.png" width="80" alt="Logo" />
+</a>
+<b><a href="https://boxmineworld.com/">BoxMine World</a></b>
+
+<details>
+  <summary><b>Details</b></summary>
+
+  - Website: [boxmineworld.com](https://boxmineworld.com)
+  - Dashboard: [dash.boxmineworld.com](https://dash.boxmineworld.com)
+  - Panel: [panel.boxmineworld.com](https://panel.boxmineworld.com)
+
+</details>
+
+<a href="https://termux.dev/">
+  <img src="https://termux.dev/favicon.ico" width="80" alt="Logo" />
+</a>
+<b><a href="https://termux.dev/">Termux</a></b>
+
+<details>
+ <summary><b>Details</b></summary>
+
 ```bash
-# Navigate to the home directory
-cd 
+# Setup Termux storage
+termux-setup-storage
 
-# Set up Termux storage
-termux-setup-storage 
-
-# Update package lists
-apt-get update -y 
-
-# Upgrade installed packages
-apt-get upgrade -y 
+# Update and upgrade packages
+apt-get update -y && apt-get upgrade -y
 
 # Install necessary packages
-pkg install -y git nodejs ffmpeg yarn 
+pkg install -y git nodejs ffmpeg yarn
 
-# Clone the Simple-WaBot repository from GitHub
-git clone https://github.com/G4tito/Simple-WaBot.git 
+# Clone the Simple-WaBot repo
+git clone https://github.com/G4tito/Simple-WaBot.git
 
-# Navigate to the cloned project directory
-cd Simple-WaBot 
+# Navigate to the project directory
+cd Simple-WaBot
 
-# Install project dependencies using Yarn
-yarn install 
+# Install project dependencies
+yarn install
 
-# Run the application with Node.js
+# Run the application
 node .
 ```
+</details>
 
 ## 💼 | Contributors
 
