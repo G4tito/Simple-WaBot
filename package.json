@@ -1,6 +1,6 @@
 {
     "name": "Simple-WaBot",
-    "version": "0.0.12",
+    "version": "0.0.13",
     "description": "Simple WhatsApp bot using Baileys library.",
     "main": "index.js",
     "scripts": {
@@ -29,6 +29,7 @@
         "file-type": "^16.5.4",
         "fluent-ffmpeg": "^2.1.2",
         "fs": "0.0.1-security",
+        "g4f": "1.4.6",
         "human-readable": "^0.2.1",
         "jimp": "^0.16.2",
         "link-preview-js": "^3.0.5",
