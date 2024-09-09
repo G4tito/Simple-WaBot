@@ -12,13 +12,16 @@ exports.cmd = {
     async start({ msg }) {
         let q = msg.quoted ? msg.quoted : msg;
         if (!/(image\/(?!webp))|video/.test(q.media?.mimetype)) {
-            return msg.reply('*🚩 Responde a una imagen/video/gif que quieras convertir en sticker.*');
+            return msg.reply('*🚩 Responde a una imagen, video o gif para convertirlo en sticker.*');
         }
         
         let opts = {
             ...sticker,
             emojis: ['🧶', '🐈'],
-            isFull: true
+            isFull: true,
+            other: {
+                'is-ai-sticker': 1
+            }
         };
         
         let media = await q.download();
