@@ -8,9 +8,9 @@ exports.cmd = {
         desc: 'Extrae la metadata de un sticker.',
         use: 'media'
     },
-    async start({ msg }) {
+    async start({ msg, args }) {
         const q = msg.quoted ? msg.quoted : msg;
-        
+
         if (!/sticker/.test(q.type)) {
             return msg.reply('Etiqueta un sticker para extraer la metadata.');
         }
@@ -18,6 +18,10 @@ exports.cmd = {
         const img = new Image();
         await img.load(await q.download());
         const exif = JSON.parse(img.exif.slice(22).toString());
+
+        if (args[0] === '--json') {
+            return msg.reply(JSON.stringify(exif, null, 4));
+        }
 
         let teks = '—  *STICKER*  〤  *EXIF*' + '\n\n'
             + `- *Nombre* ∙ ${exif['sticker-pack-name'] || '–'}\n`
