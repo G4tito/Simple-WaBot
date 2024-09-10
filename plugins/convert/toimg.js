@@ -6,7 +6,7 @@ exports.cmd = {
     category: ['convert'],
     detail: {
         desc: 'Convierte un sticker a Imagen.',
-        use: 'media'
+        use: 'stick.'
     },
     async start({ msg }) {
         let q = msg.quoted ? msg.quoted : msg;
