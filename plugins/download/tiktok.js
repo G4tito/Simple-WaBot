@@ -33,6 +33,8 @@ exports.cmd = {
         }
 
         const filteredMedia = result.media.filter(m => m.type === 'nwm' || m.type === 'photo');
+
+        let firstMedia = true;
         for (let media of filteredMedia) {
             if (media.type === 'nwm') {
                 const size = await formatSize(await ufs(media.url));
@@ -41,7 +43,12 @@ exports.cmd = {
                     return msg.reply(`*📂 | El video pesa ${size}, excede el límite máximo de descarga que es de ${isLimit} MB.*`);
                 }
             }
-            await msg.reply(result.title, { media: media.url });
+            if (firstMedia) {
+                await msg.reply(result.title, { media: media.url });
+                firstMedia = false;
+            } else {
+                await msg.reply({ media: media.url });
+            }
         }
 
         await msg.react('✅');
