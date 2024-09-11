@@ -20,7 +20,8 @@ exports.cmd = {
         }
 
         const balanceMessage = `*Balance* de *@${targetUser.split('@')[0]}* ;\n\n`
-            + `\t🪙 *Coins*: [ ${user.money} ]`;
+            + `\t◦  *Billetera*:\n\t\t${user.money} 🪙 Coins\n\n`
+            + `\t◦  *Banco*:\n\t\t${user.bank} 🪙 Coins`;
 
         await msg.reply(balanceMessage, { mentions: [targetUser] });
     }
