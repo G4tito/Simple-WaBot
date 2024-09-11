@@ -43,6 +43,10 @@ const tags = {
         emoji: '🎮',
         name: 'Juegos'
     },
+    'economy': {
+        emoji: '🪙',
+        name: 'Economía'
+    },
     'anime': {
         emoji: '🧧',
         name: 'Anime'
