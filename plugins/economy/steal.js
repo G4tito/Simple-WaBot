@@ -8,7 +8,7 @@ exports.cmd = {
     category: ['economy'],
     detail: {
         desc: 'Robar dinero a otro a otro usuario del grupo.',
-        use: 'usr.'
+        use: 'user'
     },
     setting: {
         isRegister: true,

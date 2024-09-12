@@ -4,7 +4,7 @@ exports.cmd = {
     category: ['economy'],
     detail: {
         desc: 'Muestra el balance de dinero del usuario.',
-        use: 'usr.'
+        use: 'user'
     },
     setting: {
         isRegister: true,
