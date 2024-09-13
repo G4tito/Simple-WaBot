@@ -4,7 +4,7 @@ const cooldown = 30 * 60 * 1000;
 
 exports.cmd = {
     name: ['steal'],
-    command: ['steal'],
+    command: ['steal', 'rob'],
     category: ['economy'],
     detail: {
         desc: 'Robar dinero a otro a otro usuario del grupo.',
