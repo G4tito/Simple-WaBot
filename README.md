@@ -34,7 +34,7 @@ If in doubt, before installing this bot, try it in the WhatsApp group.
 ## ✨ | Features
 
 - [x] Support for multiple custom prefixes.
-- [ ] Offers games and entertainment.
+- [x] Offers games and entertainment.
 - [x] Manage the moderation of the groups.
 - [x] Download multimedia content.
 
@@ -54,16 +54,18 @@ Before using the bot, make sure you have the following requirements installed.
 > It has not yet been purchased whether they are compatible with other platforms.
 
 <a href="https://boxmineworld.com/">
-  <img src="https://boxmineworld.com/img/favicon.png" width="80" alt="Logo" />
+  <img src="https://boxmineworld.com/img/favicon.png" width="80" alt="Logo" style="vertical-align: middle;" />
 </a>
-<b><a href="https://boxmineworld.com/">BoxMine World</a></b>
+<b><a href="https://boxmineworld.com/">BoxMine World</a></b> <span>(recommended)</span>
 
 <details>
   <summary><b>Details</b></summary>
 
-  - Website: [boxmineworld.com](https://boxmineworld.com)
-  - Dashboard: [dash.boxmineworld.com](https://dash.boxmineworld.com)
-  - Panel: [panel.boxmineworld.com](https://panel.boxmineworld.com)
+_This bot has been specifically developed to work with this hosting service._
+
+- Official website: [boxmineworld.com](https://boxmineworld.com)
+- Dashboard: [dash.boxmineworld.com](https://dash.boxmineworld.com)
+- Control panel: [panel.boxmineworld.com](https://panel.boxmineworld.com)
 
 </details>
 
