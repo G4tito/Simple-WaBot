@@ -68,6 +68,6 @@ async function getMedia(url) {
 }
 
 function isFacebookUrl(url) {
-    const regex = /^https?:\/\/([a-zA-Z0-9-]+\.)?facebook\.com\/.+$/;
+    const regex = /^https?:\/\/([a-zA-Z0-9-]+\.)?(facebook|fb)\.com\/.+$/;
     return regex.test(url);
 }
