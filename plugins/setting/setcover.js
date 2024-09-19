@@ -1,4 +1,4 @@
-const { uploadToTelegraph } = require('../../lib/sticker.js');
+const upload = require('../../lib/scraper/upload.js');
 
 exports.cmd = {
     name: ['setcover'],
@@ -23,7 +23,7 @@ exports.cmd = {
         if (!/image/.test(q.type)) return msg.reply('*🚩 Responde a una imagen para cambiar la miniatura del menú.*');
 
         let buffer = await q.download();
-        setting.cover = await uploadToTelegraph(buffer);
+        setting.cover = await upload.image(buffer);
         await db.save();
         await msg.reply('*🚩 La miniatura del menú se ha cambiado con éxito.*');
     }
