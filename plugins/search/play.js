@@ -1,5 +1,6 @@
-const { prepareWAMessageMedia, generateWAMessageFromContent } = require('@whiskeysockets/baileys');
 const youtube = require('../../lib/scraper/youtube.js');
+const { formatSize } = require('../../lib/func.js');
+const ufs = require('../../lib/ufs.js');
 
 exports.cmd = {
     name: ['play'],
@@ -26,54 +27,16 @@ exports.cmd = {
 
         let URL = 'https://youtu.be/' + result.videoId;
         let teks = '—  *YOUTUBE*  〤  *PLAY*' + '\n\n'
-            + '- *Título* · ' + result.title + '\n'
-            + '- *ID* · ' + result.videoId + '\n'
-            + '- *Canal* · ' + result.author.name + '\n'
-            + '- *Subido* · ' + toTimeAgo(result.ago) + '\n'
-            + '- *Vistas* · ' + (toCompact(result.views) || result.views) + '\n'
-            + '- *Duración* · ' + result.timestamp + '\n'
-            + '- *URL* · ' + URL + '\n';
+            + '\t' + '◦  *Título* : ' + result.title + '\n'
+            + '\t' + '◦  *ID* : ' + result.videoId + '\n'
+            + '\t' + '◦  *Canal* : ' + result.author.name + '\n'
+            + '\t' + '◦  *Subido* : ' + toTimeAgo(result.ago) + '\n'
+            + '\t' + '◦  *Vistas* : ' + (toCompact(result.views) || result.views) + '\n'
+            + '\t' + '◦  *Duración* : ' + result.timestamp + '\n'
+            + '\t' + '◦  *URL* : ' + URL + '\n\n'
+            + '*Para descargar*, responde con `Audio` o `Video`.';
 
-        let prepareMessage = await prepareWAMessageMedia({ image: { url: result.thumbnail }}, { upload: sock.waUploadToServer });
-        let message = generateWAMessageFromContent(msg.from, {
-            viewOnceMessage: {
-                message: {
-                    interactiveMessage: {
-                        contextInfo: {
-                            expiration: msg.expiration
-                        },
-                        body: { text: teks },
-                        footer: { text: 'Selecciona un *formato* de descarga *mp3* o *mp4*.' },
-                        header: {
-                            hasMediaAttachment: true,
-                            imageMessage: prepareMessage.imageMessage,
-                        },
-                        nativeFlowMessage: {
-                            buttons: [
-                                {
-                                    name: 'quick_reply',
-                                    buttonParamsJson: JSON.stringify({
-                                        display_text: 'Audio 🎵 (128kbps)',
-                                        id: prefix + 'ytmp3 ' + URL
-                                    })
-                                },
-                                {
-                                    name: 'quick_reply',
-                                    buttonParamsJson: JSON.stringify({
-                                        display_text: 'Video 🎥 (360p)',
-                                        id: prefix + 'ytmp4 ' + URL
-                                    })
-                                }
-                            ],
-                            messageParamsJson: '',
-                        },
-                    },
-                },
-            }
-        }, { userJid: sock.user.jid, quoted: msg });
-        await sock.relayMessage(msg.from, message.message, {});
-
-        //await msg.reply(teks, { image: result.thumbnail });
+        await msg.reply(teks, { image: result.thumbnail });
         await msg.react('✅');
     }
 };
@@ -107,4 +70,67 @@ function toTimeAgo(ago) {
     }
     
     return ago;
+}
+
+
+const audioLimit = 20 * 1024 * 1024; // 20 MB
+const videoLimit = 70 * 1024 * 1024; // 70 MB
+
+exports.before = {
+    async start({ msg, isBaileys }) {
+        if (isBaileys) return;
+
+        const type = (msg?.text || '').toLowerCase();
+        if (type !== 'audio' && type !== 'video') {
+            return;
+        }
+
+        if (!msg.quoted) {
+            return msg.reply('*🚩 Etiqueta el mensaje que contenga el resultado de YouTube Play.*');
+        }
+
+        if (!msg.quoted.text.includes('—  *YOUTUBE*  〤  *PLAY*')) {
+            return msg.reply('*🚩 Ese mensaje no contiene el resultado de YouTube Play.*');
+        }
+
+        const urls = msg.quoted.text.match(/(?:https?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed|shorts)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9\_-]+)/gi);
+
+        await msg.react('🕓');
+
+        const mediaType = type === 'audio' ? 'audio' : 'video';
+        const result = await getMedia(urls[0], mediaType);
+
+        if (!result) {
+            await msg.react('✖');
+            return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
+        }
+
+        const urlToUse = mediaType === 'audio' ? result.audio.url || result.audio.buffer : result.video.url;
+        const sizeInBytes = await ufs(urlToUse);
+
+        const limit = mediaType === 'audio' ? audioLimit : videoLimit;
+
+        if (sizeInBytes >= limit) {
+            const readableSize = await formatSize(sizeInBytes);
+            const limitReadable = await formatSize(limit);
+            await msg.react('✖');
+            return msg.reply(`*📂 | El archivo pesa ${readableSize}, excede el límite máximo de descarga que es de ${limitReadable}.*`);
+        }
+
+        const fileExtension = mediaType === 'audio' ? '.mp3' : '.mp4';
+        const mimetype = mediaType === 'audio' ? 'audio/mpeg' : 'video/mp4';
+
+        await msg.reply(result.title, { [mediaType]: urlToUse, fileName: result.title + fileExtension, mimetype });
+        await msg.react('✅');
+    }
+};
+
+async function getMedia(url, type) {
+    for (const version of ['V1', 'V2']) {
+        const { status, result } = await youtube.download[version](url, { type, quality: type === 'audio' ? 128 : 360 });
+        if (status) {
+            return result;
+        }
+    }
+    return null;
 }
