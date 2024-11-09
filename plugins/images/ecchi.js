@@ -1,11 +1,11 @@
 const axios = require('axios');
 
 exports.cmd = {
-    name: ['ass'],
-    command: ['ass'],
+    name: ['ecchi'],
+    command: ['ecchi'],
     category: ['anime', 'images'],
     detail: {
-        desc: 'Envia una imagen aleatoria de unos traseros.'
+        desc: 'Envia una imagen ecchi aleatoria.'
     },
     setting: {
         error_react: true,
@@ -13,8 +13,8 @@ exports.cmd = {
     },
     async start({ msg }) {
         await msg.react('🕓');
-        let res = await axios.get('https://api.waifu.im/search/?included_tags=ass');
-        await msg.reply('Random ass image.', { image: res.data.images[0].url });
+        let res = await axios.get('https://api.waifu.im/search/?included_tags=ecchi');
+        await msg.reply('Random ecchi image.', { image: res.data.images[0].url });
         await msg.react('✅');
     }
 };
