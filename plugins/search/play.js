@@ -73,64 +73,106 @@ function toTimeAgo(ago) {
 }
 
 
-const audioLimit = 20 * 1024 * 1024; // 20 MB
-const videoLimit = 70 * 1024 * 1024; // 70 MB
+const audioLimit = 20 * 1024 * 1024;  // 20 MB
+const videoLimit = 70 * 1024 * 1024;  // 70 MB
 
 exports.before = {
     async start({ msg, isBaileys }) {
         if (isBaileys) return;
 
         const type = (msg?.text || '').toLowerCase();
-        if (type !== 'audio' && type !== 'video') {
-            return;
-        }
+
+        if (!['audio', 'video'].some(p => type.startsWith(p)) && !type.includes('-doc')) return;
+
+        const options = parseOptions(msg.text);
+        const quality = options.quality || (options.type === 'audio' ? 128 : 360);
 
         if (!msg.quoted) {
             return msg.reply('*🚩 Etiqueta el mensaje que contenga el resultado de YouTube Play.*');
         }
 
         if (!msg.quoted.text.includes('—  *YOUTUBE*  〤  *PLAY*')) {
-            return msg.reply('*🚩 Ese mensaje no contiene el resultado de YouTube Play.*');
+            return msg.reply('🚩 Ese mensaje no contiene el resultado de *YouTube Play*.');
         }
 
-        const urls = msg.quoted.text.match(/(?:https?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed|shorts)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9\_-]+)/gi);
+        const urls = msg.quoted.text.match(
+            /(?:https?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed|shorts)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9\_-]+)/gi
+        );
 
         await msg.react('🕓');
 
-        const mediaType = type === 'audio' ? 'audio' : 'video';
-        const result = await getMedia(urls[0], mediaType);
+        const result = await getMedia(urls[0], options.type, quality);
 
         if (!result) {
             await msg.react('✖');
             return msg.reply('*📛 | Ups, hubo un error al obtener el resultado.*');
         }
 
-        const urlToUse = mediaType === 'audio' ? result.audio.url || result.audio.buffer : result.video.url;
-        const sizeInBytes = await ufs(urlToUse);
+        const urlToUse = options.type === 'audio' 
+            ? result.audio.url || result.audio.buffer 
+            : options.type === 'video' 
+                ? result.video.url 
+                : null;
 
-        const limit = mediaType === 'audio' ? audioLimit : videoLimit;
+        if (!urlToUse) {
+            await msg.react('✖');
+            return msg.reply('*📛 | El archivo no se encontró.*');
+        }
+
+        const sizeInBytes = await ufs(urlToUse);
+        const limit = options.type === 'audio' 
+            ? audioLimit 
+            : options.type === 'video' 
+                ? videoLimit 
+                : documentLimit;
 
         if (sizeInBytes >= limit) {
             const readableSize = await formatSize(sizeInBytes);
             const limitReadable = await formatSize(limit);
             await msg.react('✖');
-            return msg.reply(`*📂 | El archivo pesa ${readableSize}, excede el límite máximo de descarga que es de ${limitReadable}.*`);
+            return msg.reply(
+                `*📂 | El archivo pesa ${readableSize}, excede el límite máximo de descarga que es de ${limitReadable}.*`
+            );
         }
 
-        const fileExtension = mediaType === 'audio' ? '.mp3' : '.mp4';
-        const mimetype = mediaType === 'audio' ? 'audio/mpeg' : 'video/mp4';
+        const fileExtension = options.type === 'audio' ? '.mp3' : '.mp4';
+        const mimetype = options.type === 'audio' ? 'audio/mpeg' : 'video/mp4';
 
-        await msg.reply(result.title, { [mediaType]: urlToUse, fileName: result.title + fileExtension, mimetype });
+        await msg.reply(result.title, {
+            [options.doc ? 'document' : options.type]: urlToUse,
+            fileName: result.title + fileExtension,
+            mimetype
+        });
+
         await msg.react('✅');
     }
 };
 
-async function getMedia(url, type) {
+async function getMedia(url, type, quality) {
     for (const version of ['V1', 'V2']) {
-        const { status, result } = await youtube.download[version](url, { type, quality: type === 'audio' ? 128 : 360 });
+        const { status, result } = await youtube.download[version](url, { type, quality });
         if (status) {
             return result;
         }
     }
     return null;
+}
+
+function parseOptions(text) {
+    const options = { type: null, doc: false, quality: null };
+
+    if (/^audio/i.test(text)) {
+        options.type = 'audio';
+    } else if (/^video/i.test(text)) {
+        options.type = 'video';
+    }
+
+    options.doc = / -doc/i.test(text);
+
+    const qualityMatch = text.match(/-(\d+kbps|\d+p)/i);
+    if (qualityMatch) {
+        options.quality = parseInt(qualityMatch[1].toLowerCase());
+    }
+
+    return options;
 }
