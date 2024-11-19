@@ -1,9 +1,9 @@
 exports.cmd = {
-    name: ['kick'],
-    command: ['kick'],
+    name: ['promote'],
+    command: ['promote'],
     category: ['moderation'],
     detail: {
-        desc: 'Elimina a un usuario del grupo.',
+        desc: 'Promove a un usuario de miembro a administrador.',
         use: 'user'
     },
     setting: {
@@ -14,7 +14,7 @@ exports.cmd = {
     async start({ msg, participants, sock }) {
         let who = msg.quoted ? msg.quoted.sender : msg.mentions[0];
         if (!who) {
-            return msg.reply('*🚩 Menciona o responde al mensaje del usuario que deseas eliminar.*');
+            return msg.reply('*🚩 Menciona o responde al mensaje del usuario que deseas promover.*');
         }
 
         let member = participants.find(u => u.id === who);
@@ -22,7 +22,7 @@ exports.cmd = {
             return msg.reply('*🚩 El usuario no está en el grupo.*');
         }
 
-        await sock.groupParticipantsUpdate(msg.from, [who], 'remove');
-        await msg.reply(`*🚩 El usuario @${who.split('@')[0]} ha sido eliminado con éxito.*`, { mentions: [who] });
+        await sock.groupParticipantsUpdate(msg.from, [who], 'promote');
+        await msg.reply(`*🚩 El usuario @${who.split('@')[0]} ha sido promovido con éxito.*`, { mentions: [who] });
     }
 };
